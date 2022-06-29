@@ -24,8 +24,19 @@ function generate_keys {
 
     #generating random keys 
     for i in $(seq $key_max); do
-        encrypt -g > "$keydir/$k.dk"
+        encrypt -g > "$keydir/$key_cur.dk"
+        echo "[\"$k\",\"$keydir/$k.dk\",\"systemkey.dk\" ]" |
+        jq -r '{ "number":.[0], "location":.[1], "parent":.[2] }' \
+        > "$jsondir/$k.json"
+        
+        # incrementing key_cur
+        key_cur=$((key_cur+1))
+    done
 
+    unset key_cur
+    unset key_max
 }
+
+
 
 generate_keys
