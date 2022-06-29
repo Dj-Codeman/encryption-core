@@ -1,0 +1,66 @@
+#!/bin/bash
+source /code/encryption/scripts/store.conf
+# each record with an existing key will be re indexed
+
+
+### ORIGINAL IF STATMENT
+
+if [ -f "$jsondir/master.json" ]; then
+  if [ -f "$systemkey" ]; then
+    echo "Index Present"
+    check_keys
+  else
+    echo "Index Not Found"
+    check_keys
+  fi
+fi
+
+# call routine
+if [ "$1" == "call" ]; then
+shortname="$2"
+class="$3"
+index="$jsondir/$shortname-$class.json"
+outdex="$jsondir/$shortname-$class.jn"
+encrypt -d -i "$index" -o "$outdex" -k "$( cat "$(fetch_key "systemkey")" )"
+path="$(cat "$outdex" | jq ' .path' | sed 's/"//g')"
+# echo $path
+key="$(cat "$outdex" | jq ' .key' | sed 's/"//g')"
+# echo $key
+uid="$(cat "$outdex" | jq ' .uid' | sed 's/"//g')"
+# echo $uid
+olddir="$(cat "$outdex" | jq ' .dir' | sed 's/"//g')"
+clear
+rm -v "$outdex"
+
+encrypt -d -i "$path" -o "$olddir" -k "$( cat "$(fetch_key "$key")" )"
+echo "sure"
+else
+# Storing Routine
+# picking encryption key
+#declaring file
+file="$(realpath $1)"
+shortname="$2"
+class="$3"
+
+if [ -f "$file" ]; then
+echo "File present proceeding"
+else
+echo "File does not exist"
+exit 102
+fi
+
+## Creating short hand
+  if [ -z "$class" ]; then
+    echo "No class defined please enter one"
+    read class
+  fi
+  if [ -z "$shortname" ]; then
+    echo "Shorthand name not passedthrough please enter one !"
+    read shortname
+    echo "Debug: \" Class_$class\""
+    write $file $class $shortname
+  else
+    echo "Debug: \" Class_$class\""
+    write $file $class $shortname
+  fi
+fi
