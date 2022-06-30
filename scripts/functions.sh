@@ -83,7 +83,7 @@ function fwrite {
     # assiging pos vars 
     datapath=$1
     class=$2
-    shorhand=$3
+    shortname=$3
 
     if [[ -z $class ]]; then
         echo "No class given"
