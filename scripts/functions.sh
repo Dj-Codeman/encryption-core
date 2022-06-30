@@ -37,6 +37,19 @@ function generate_keys {
     unset key_max
 }
 
+function fetch_key {
+    # key number to find information from
+    number="$1"
 
+    if [ "$number" == "systemkey" ]; then
+        key="$(cat "$jsondir/master.json" | jq '.location' | \
+        sed 's/"//g')"
+        echo "$key"
+    else
+        key="$(cat "$jsondir/$number.json" | jq '.location' | \
+        sed 's/"//g')"
+        echo "$key"
+    fi
+}
 
-generate_keys
+fetch_key 100
