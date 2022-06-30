@@ -104,7 +104,7 @@ function fwrite {
 
         name="$( echo $shortname-$class | base64 )"
         output="$datadir/$name"
-        	encrypt -e -i "$input" -o "$output" -k "$( cat "$(fetch_key $key)" )"
+        	encrypt -e -i "$input" -o "$output" -k "$( cat "$(fetch_keys $key)" )"
         if [ -f "$output" ]; then
           echo -e "\nFile Successfully encrypted"
           # removing plaintext file
@@ -159,7 +159,7 @@ function fread {
     if [ -f "$index_long" ]; then
 
         encrypt -d -i "$index_long" -o "$index_short" -k \
-        "$( cat "$(fetch_key "systemkey")" )"
+        "$( cat "$(fetch_keys "systemkey")" )"
     
         # getting variables from the json 
 
@@ -182,7 +182,7 @@ function fread {
         # dont want to leave un encrypted json files out
         rm "$index_short"    
 
-        encrypt -d -i "$path" -o "$olddir" -k "$( cat "$(fetch_key "$key")" )"
+        encrypt -d -i "$path" -o "$olddir" -k "$( cat "$(fetch_keys "$key")" )"
 
     else
 
@@ -207,13 +207,13 @@ function destroy {
     index_short="$jsondir/$shortname-$class.jn"
 
     encrypt -d -i "$index_long" -o "$index_short" -k \
-    "$(cat "$(fetch_key "systemkey")" )"
+    "$(cat "$(fetch_keys "systemkey")" )"
 
     #test if json exists
     if [ -f "$index_long" ]; then
 
         encrypt -d -i "$index_long" -o "$index_short" -k \
-        "$(cat "$(fetch_key "systemkey")" )"
+        "$(cat "$(fetch_keys "systemkey")" )"
     
         # getting variables from the json 
 
@@ -230,7 +230,7 @@ function destroy {
         # dont want to leave un encrypted json files out
         rm "$index_short"    
 
-        encrypt -d -i "$path" -o "$olddir" -k "$( cat "$(fetch_key "$key")" )"
+        encrypt -d -i "$path" -o "$olddir" -k "$( cat "$(fetch_keys "$key")" )"
 
     else
 
