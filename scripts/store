@@ -2,6 +2,8 @@
 source /code/encryption/scripts/store.conf
 # each record with an existing key will be re indexed
 
+##### to be replaced by encore
+
 
 ### ORIGINAL IF STATMENT
 
