@@ -81,9 +81,9 @@ function fwrite {
     uid="$(fetch_keys | sed 's/[ -]//g' | base64 | head -c 10; )"
 
     # assiging pos vars 
-    datapath=$2
-    class=$3
-    shorhand=$4
+    datapath=$1
+    class=$2
+    shorhand=$3
 
     if [[ -z $class ]]; then
         echo "No class given"
@@ -149,8 +149,8 @@ function fread {
     # example write ./myfile backup 9-05
 
     # assiging pos vars 
-    class=$2
-    shortname=$3
+    class=$1
+    shortname=$2
 
     index_long="$jsondir/$shortname-$class.json"
     index_short="$jsondir/$shortname-$class.jn"
