@@ -13,7 +13,7 @@ fi
 # jr and jp are the only dependencies for json editing
 # I only use ubuntu and arch btw
 if [[ -f "/usr/bin/pacman" ]]; then 
-pacman -Sy jr jp vim-common
+pacman -Sy jr jp vim
 elif [[ -f "/usr/bin/apt" ]]; then
 apt-get -y install jr jp
 fi
