@@ -60,6 +60,7 @@ elif [[ "$1" == "destroy" ]]; then
 elif [[ "$1" == "initialize" ]]; then
 
     initialize
+    exit 0
 
 else 
    show_help

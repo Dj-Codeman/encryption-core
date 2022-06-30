@@ -13,7 +13,7 @@ fi
 # jr and jp are the only dependencies for json editing
 # I only use ubuntu and arch btw
 if [[ -f "/usr/bin/pacman" ]]; then 
-pacman -Sy jr jp
+pacman -Sy jr jp vim-common
 elif [[ -f "/usr/bin/apt" ]]; then
 apt-get -y install jr jp
 fi
@@ -30,6 +30,6 @@ ln -s /opt/encore/scripts/encrypt /usr/local/bin/encrypt
 
 encore initialize
 
-chown -rfv $USER:$USER /opt/encore
+chown -Rfv $USER:$USER /opt/encore
 
 exit 0
