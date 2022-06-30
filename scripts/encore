@@ -55,7 +55,7 @@ elif [[ "$1" == "destroy" ]]; then
     exit 0
     fi
 
-    fread $shortname $class
+    destroy $shortname $class
 
 elif [[ "$1" == "initialize" ]]; then
 
