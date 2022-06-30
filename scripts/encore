@@ -70,6 +70,21 @@ elif [[ "$1" == "initialize" ]]; then
     initialize
     exit 0
 
+elif [[ "$1" == "debug" ]]; then
+
+    if [[ "$2" == "json" ]]; then
+    
+    shortname="$3"
+    class="$4"
+    
+    debug_json "$shortname" "$class"
+    
+    elif
+    echo "morecode"
+    else
+    echo "Dont know where to start do you ?"
+    fi
+
 else 
    show_help
    exit 0
