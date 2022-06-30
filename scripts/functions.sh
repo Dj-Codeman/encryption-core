@@ -18,7 +18,7 @@ function generate_keys {
     encrypt -g > "$systemkey"
     
     # creating json file
-    echo "[\"0\",\"$systemkey\",\"NULL\" ]" jq -r '{ "number":.[0], "location":.[1], "parent":.[2] }' > "$jsondir/master.json"
+    echo "[\"0\",\"$systemkey\",\"NULL\" ]" | jq -r '{ "number":.[0], "location":.[1], "parent":.[2] }' > "$jsondir/master.json"
 
     #generating random keys 
     for i in $(seq $key_max); do
