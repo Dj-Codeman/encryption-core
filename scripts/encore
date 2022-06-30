@@ -6,11 +6,12 @@ function show_help {
     echo "Help your self foo"
 }
 
+
+file="$(realpath $2)"
+shortname="$3"
+class="$4"
+
 if [[ "$1" == "write" ]]; then
-    
-    file="$(realpath $2)"
-    shortname="$3"
-    class="$4"
 
     if [[ -z "$file" ]]; then
     echo "No file given"
