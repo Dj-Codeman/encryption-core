@@ -5,7 +5,7 @@ source /opt/encore/config
 
 # function for creating keys and json file pairs
 
-function generate_keys {
+function generate_keys {    
     echo "Cleaning old keys and generating new ones"
     rm -rfv "$keydir/"
     rm -rfv "$jsondir/"
@@ -18,17 +18,12 @@ function generate_keys {
     encrypt -g > "$systemkey"
     
     # creating json file
-    echo "[\"0\",\"$systemkey\",\"NULL\" ]" |
-    jq -r '{ "number":.[0], "location":.[1], "parent":.[2] }' \
-    > "$jsondir/master.json"
+    echo "[\"0\",\"$systemkey\",\"NULL\" ]" jq -r '{ "number":.[0], "location":.[1], "parent":.[2] }' > "$jsondir/master.json"
 
     #generating random keys 
     for i in $(seq $key_max); do
         encrypt -g > "$keydir/$key_cur.dk"
-        echo "[\"$k\",\"$keydir/$k.dk\",\"systemkey.dk\" ]" |
-        jq -r '{ "number":.[0], "location":.[1], "parent":.[2] }' \
-        > "$jsondir/$k.json"
-        
+        echo "[\"$k\",\"$keydir/$k.dk\",\"systemkey.dk\" ]" | jq -r '{ "number":.[0], "location":.[1], "parent":.[2] }' > "$jsondir/$k.json"
         # incrementing key_cur
         key_cur=$((key_cur+1))
     done
@@ -36,22 +31,20 @@ function generate_keys {
     unset key_cur
 }
 
-function fetch_keys {
+function fetch_keys {   
     # key number to find information from
     number="$1"
 
     if [ "$number" == "systemkey" ]; then
-        key="$(cat "$jsondir/master.json" | jq '.location' | \
-        sed 's/"//g')"
+        key="$(cat "$jsondir/master.json" | jq '.location' | sed 's/"//g')"
         echo "$key"
     else
-        key="$(cat "$jsondir/$number.json" | jq '.location' | \
-        sed 's/"//g')"
+        key="$(cat "$jsondir/$number.json" | jq '.location' | sed 's/"//g')"
         echo "$key"
     fi
 }
 
-function check_keys {
+function check_keys {   
     #verifying keys are in place and valid
     if [ -f "$(fetch_keys "systemkey")" ]; then
         echo "Systemkey exists" >> ../logs/encore.log
@@ -68,7 +61,7 @@ function check_keys {
     fi
 }
 
-function fwrite {
+function fwrite {   
     # positional variables for write command
     # 1. path of the file realpath
     # 2. class for the json file
@@ -113,9 +106,7 @@ function fwrite {
           #json base file variable
           jsonbase="$jsondir/$shortname-$class"
           ## If shortname already exists call a flush ... whatever that will be
-          echo "[\"$shortname\",\"$class\",\"$key\",\"$uid\",\"$output\",\"$dir\"]" \
-          | jq -r '{ "name":.[0], "class":.[1], "key":.[2], "uid":.[3], "path":.[4], "dir":.[5] }' \
-          > "$jsonbase.jn"
+          echo "[\"$shortname\",\"$class\",\"$key\",\"$uid\",\"$output\",\"$dir\"]" | jq -r '{ "name":.[0], "class":.[1], "key":.[2], "uid":.[3], "path":.[4], "dir":.[5] }' > "$jsonbase.jn"
           encrypt -e -i "$jsonbase.jn" -o "$jsonbase.json" -k "$( cat "$(fetch_keys "systemkey")" )"
           if [ -f "$jsonbase.json" ]; then
             echo "index created succefully"
@@ -158,8 +149,7 @@ function fread {
     #test if json exists
     if [ -f "$index_long" ]; then
 
-        encrypt -d -i "$index_long" -o "$index_short" -k \
-        "$( cat "$(fetch_keys "systemkey")" )"
+        encrypt -d -i "$index_long" -o "$index_short" -k "$( cat "$(fetch_keys "systemkey")" )"
     
         # getting variables from the json 
 
@@ -194,7 +184,7 @@ function fread {
 
 }
 
-function destroy {
+function destroy {  
     
     class=$1
     shortname=$2
@@ -206,14 +196,12 @@ function destroy {
     index_long="$jsondir/$shortname-$class.json"
     index_short="$jsondir/$shortname-$class.jn"
 
-    encrypt -d -i "$index_long" -o "$index_short" -k \
-    "$(cat "$(fetch_keys "systemkey")" )"
+    encrypt -d -i "$index_long" -o "$index_short" -k "$(cat "$(fetch_keys "systemkey")" )"
 
     #test if json exists
     if [ -f "$index_long" ]; then
 
-        encrypt -d -i "$index_long" -o "$index_short" -k \
-        "$(cat "$(fetch_keys "systemkey")" )"
+        encrypt -d -i "$index_long" -o "$index_short" -k "$(cat "$(fetch_keys "systemkey")" )"
     
         # getting variables from the json 
 
