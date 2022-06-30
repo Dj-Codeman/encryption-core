@@ -28,6 +28,10 @@ keydir="/opt/encore/keys"
 
 systemkey="/opt/encore/keys/systemkey.dk"
 
+#log dir
+
+logdir="/opt/encore/logs/log"
+
 # key_max the limit of keys to generate
 # default=1
 
@@ -50,3 +54,10 @@ soft_move=0
 # default=1
 
 re_place=1
+
+# save on destroy
+# if you want the destroy function to recover the file before deleting
+# the encrypted copy set this
+# default=0
+
+leave_in_peace=0

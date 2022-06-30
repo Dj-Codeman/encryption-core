@@ -68,7 +68,7 @@ function check_keys {
     fi
 }
 
-function write {
+function fwrite {
     # positional variables for write command
     # 1. path of the file realpath
     # 2. class for the json file
@@ -141,7 +141,7 @@ function write {
 
 }
 
-function read {
+function fread {
     # positional variables for write command
     # 1. path of the file realpath
     # 2. class for the json file
@@ -195,7 +195,51 @@ function read {
 }
 
 function destroy {
-    echo ""
-}
+    
+    class=$1
+    shortname=$2
 
-fetch_key 100
+    if [[ $leave_in_peace == "1" ]]; then
+     fread "$class" "$shortname"
+    fi
+
+    index_long="$jsondir/$shortname-$class.json"
+    index_short="$jsondir/$shortname-$class.jn"
+
+    encrypt -d -i "$index_long" -o "$index_short" -k \
+    "$(cat "$(fetch_key "systemkey")" )"
+
+    #test if json exists
+    if [ -f "$index_long" ]; then
+
+        encrypt -d -i "$index_long" -o "$index_short" -k \
+        "$(cat "$(fetch_key "systemkey")" )"
+    
+        # getting variables from the json 
+
+        # current path to encrypted file
+        path="$(cat "$index_short" | jq ' .path' | sed 's/"//g')"
+
+        #uid is the base64 encoding file name
+        uid="$(cat "$index_short" | jq ' .uid' | sed 's/"//g')"
+
+        if [[ $re_place == "0" ]]; then 
+            olddir="$datadir/$shortname-$class"
+        fi
+
+        # dont want to leave un encrypted json files out
+        rm "$index_short"    
+
+        encrypt -d -i "$path" -o "$olddir" -k "$( cat "$(fetch_key "$key")" )"
+
+    else
+
+        echo "$index_long does not exist"
+        exit 1
+
+    fi
+
+    rm -v "$index_long" "$index_short" "$path" >> "$logdir" 
+    
+    exit 0
+}
