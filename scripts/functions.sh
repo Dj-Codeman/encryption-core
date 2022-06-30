@@ -37,7 +37,7 @@ function generate_keys {
     unset key_max
 }
 
-function fetch_key {
+function fetch_keys {
     # key number to find information from
     number="$1"
 
@@ -51,5 +51,25 @@ function fetch_key {
         echo "$key"
     fi
 }
+
+function check_keys {
+    #verifying keys are in place and valid
+    if [ -f "$(fetch_keys "systemkey")" ]; then
+        echo "Systemkey exists" >> ../logs/encore.log
+        # add a section to veryfy key integrity
+        # maybe md5 checksum ???
+        # key test 
+        # if failed generate_keys
+    else
+        echo "Keys missing" >> ../logs/encore.log
+        generate_keys
+        # refactor for individual json files instead of master index
+        echo "Keys were rotated please run again"
+        exit 1
+    fi
+}
+
+
+
 
 fetch_key 100
