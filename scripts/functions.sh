@@ -243,3 +243,20 @@ function destroy {
     
     exit 0
 }
+
+function initialize {
+
+    encrypt -t
+
+    encrypt -b
+    
+    generate_keys
+
+    check_keys
+
+    touch /tmp/tmp
+
+    fwrite /tmp/tmp test tmp
+
+    destroy test tmp 
+}
