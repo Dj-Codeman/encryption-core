@@ -3,34 +3,50 @@
 #LOCATIONS
 # Data this is where the finished and encrypted files live
 # When keys are regenerated this folder will be emptyied 
+# default /opt/encore/data
 
-datadir="/mnt/Backups"
+datadir="/opt/encore/data"
 
 # JSON This is where plan text key indexs will live
 # these are generated along side the keys
+# default /opt/encore/indexs
 
-jsondir="/code/encryption/indexs"
+jsondir="/opt/encore/indexs"
 
 # KEY These are the random encryption keys 
 # 128 bit strings for use with the encrypt script
 # https://www.fastsitephp.com/fr/documents/file-encryption-bash
+# default /opt/encore/keys
 
-keydir="/code/encryption/keys"
+keydir="/opt/encore/keys"
 
 # SYSTEM KEY JSON file that contain location and key information 
 # are encrypted using this key
 # if this key is missing on script call all file in:
 # $datadir
+# default /opt/encore/keys/systemkey.dk
 
-systemkey="/code/encryption/keys/systemkey.dk"
+systemkey="/opt/encore/keys/systemkey.dk"
 
 # key_max the limit of keys to generate
+# default=1
+
 key_max=100
 
-#debugging setting keygen counter  
+# debugging setting keygen counter  
+
 key_cur=0
 
 # soft moving
 # use cp instead of mv when gatheing files to encrypt
 # default = 0
+
 soft_move=0
+
+# re-place file
+# the original path of files are stored when encrypted
+# if set files will be re placed back in there original
+# directory
+# default=1
+
+re_place=1
