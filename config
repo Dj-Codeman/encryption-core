@@ -33,9 +33,8 @@ systemkey="/opt/encore/keys/systemkey.dk"
 logdir="/opt/encore/logs/log"
 
 # key_max the limit of keys to generate
-# default=1
-
-key_max=100
+# default=100
+key_max=20
 
 # debugging setting keygen counter  
 
