@@ -23,7 +23,7 @@ function generate_keys {
     #generating random keys 
     for i in $(seq $key_max); do
         encrypt -g > "$keydir/$key_cur.dk"
-        echo "[\"$k\",\"$keydir/$k.dk\",\"systemkey.dk\" ]" | jq -r '{ "number":.[0], "location":.[1], "parent":.[2] }' > "$jsondir/$k.json"
+        echo "[\"$key_cur\",\"$keydir/$key_cur.dk\",\"systemkey.dk\" ]" | jq -r '{ "number":.[0], "location":.[1], "parent":.[2] }' > "$jsondir/$key_cur.json"
         # incrementing key_cur
         key_cur=$((key_cur+1))
     done
@@ -172,7 +172,7 @@ function fread {
         # dont want to leave un encrypted json files out
         rm "$index_short"    
 
-        encrypt -d -i "$path" -o "$olddir" -k "$( cat "$(fetch_keys "$key")" )"
+        encrypt -d -i "$path" -o "$olddir" -k "$(cat "$(fetch_keys "$key")" )"
 
     else
 
