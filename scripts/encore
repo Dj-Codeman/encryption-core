@@ -1,6 +1,7 @@
 #!/bin/bash
 
 source /opt/encore/scripts/functions.sh
+source /opt/encore/scripts/debug.sh
 
 function show_help {
     echo "Help your self foo"
