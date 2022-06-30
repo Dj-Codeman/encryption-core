@@ -18,7 +18,7 @@ elif [[ -f "/usr/bin/apt" ]]; then
 apt-get -y install jr jp
 fi
 
-rm -rfv ./encryption-core
+rm -rfv /opt/encore
 
 mkdir /opt/encore
 
