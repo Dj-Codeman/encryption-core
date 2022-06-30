@@ -78,8 +78,8 @@ elif [[ "$1" == "debug" ]]; then
     class="$4"
     
     debug_json "$shortname" "$class"
-    
-    elif
+
+    elif [[ -z "$3" ]]; then
     echo "morecode"
     else
     echo "Dont know where to start do you ?"
