@@ -34,4 +34,8 @@ encore initialize
 
 chown -Rfv $USER:$USER /opt/encore
 
+clear 
+
+echo "encore installed / updated sucessfully"
+
 exit 0

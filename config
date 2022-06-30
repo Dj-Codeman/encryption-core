@@ -44,7 +44,7 @@ key_cur=0
 # use cp instead of mv when gatheing files to encrypt
 # default = 0
 
-soft_move=0
+soft_move=1
 
 # re-place file
 # the original path of files are stored when encrypted
@@ -59,4 +59,4 @@ re_place=1
 # the encrypted copy set this
 # default=0
 
-leave_in_peace=0
+leave_in_peace=1
