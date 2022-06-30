@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # reading config file config
-source ./config
+source /opt/encore/config
 
 # function for creating keys and json file pairs
 
@@ -141,11 +141,11 @@ function write {
 }
 
 function read {
-
+echo ""
 }
 
 function destroy {
-
+echo ""
 }
 
 fetch_key 100

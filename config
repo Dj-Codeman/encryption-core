@@ -1,7 +1,5 @@
 #!/bin/bash
-# This is proper config file with the variables for the store call
-#
-#
+
 #LOCATIONS
 # Data this is where the finished and encrypted files live
 # When keys are regenerated this folder will be emptyied 
