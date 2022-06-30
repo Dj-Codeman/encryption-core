@@ -250,9 +250,9 @@ function initialize {
 
     encrypt -b
     
-    generate_keys
-
     check_keys
+
+    generate_keys
 
     touch /tmp/tmp
 
