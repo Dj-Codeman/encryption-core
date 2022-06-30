@@ -31,3 +31,8 @@ key_max=100
 
 #debugging setting keygen counter  
 key_cur=0
+
+# soft moving
+# use cp instead of mv when gatheing files to encrypt
+# default = 0
+soft_move=0

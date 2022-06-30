@@ -34,7 +34,6 @@ function generate_keys {
     done
 
     unset key_cur
-    unset key_max
 }
 
 function fetch_keys {
@@ -69,7 +68,84 @@ function check_keys {
     fi
 }
 
-    
+function write {
+    # positional variables for write command
+    # 1. path of the file realpath
+    # 2. class for the json file
+    # 3. shorhand name
+    # example write ./myfile backup 9-05
 
+    # picking a random key
+    key="$(shuf -i 1-"$key_max")"
+    # for the stored file name
+    uid="$(fetch_keys | sed 's/[ -]//g' | base64 | head -c 10; )"
+
+    # assiging pos vars 
+    datapath=$1
+    class=$2
+    shorhand=$3
+
+    if [[ -z $class ]]; then
+        echo "No class given"
+        exit 1
+    fi
+
+    input="$datadir/$shortname-$class.dec"
+    path="$(realpath "$datapath")"
+    
+    # checking for soft move
+    if [ "$soft_move" == "0" ]; then
+        mv -v "$(realpath "$datapath")" "$input"
+    else
+        cp -v "$(realpath "$datapath")" "$input"
+    fi
+
+    if [ -f "$input" ]; then
+        echo "File was moved successfully"
+
+        name="$( echo $shortname-$class | base64 )"
+        output="$datadir/$name"
+        	encrypt -e -i "$input" -o "$output" -k "$( cat "$(fetch_key $key)" )"
+        if [ -f "$output" ]; then
+          echo -e "\nFile Successfully encrypted"
+          # removing plaintext file
+          rm -v "$input"
+          # shortname_test
+          #json base file variable
+          jsonbase="$jsondir/$shortname-$class"
+          ## If shortname already exists call a flush ... whatever that will be
+          echo "[\"$shortname\",\"$class\",\"$key\",\"$uid\",\"$output\",\"$dir\"]" \
+          | jq -r '{ "name":.[0], "class":.[1], "key":.[2], "uid":.[3], "path":.[4], "dir":.[5] }' \
+          > "$jsonbase.jn"
+          encrypt -e -i "$jsonbase.jn" -o "$jsonbase.json" -k "$( cat "$(fetch_keys "systemkey")" )"
+          if [ -f "$jsonbase.json" ]; then
+            echo "index created succefully"
+            rm "$jsonbase.jn"
+	    unset $uid
+            unset $key
+          else
+            clear
+            echo "An error occoured creating index"
+            exit 102
+          fi
+        else
+          echo "An error occoured when encrypting file."
+        fi
+    else
+      echo "File was not copyed check freespace and try again"
+      exit 102
+    fi
+
+
+
+}
+
+function read {
+
+}
+
+function destroy {
+
+}
 
 fetch_key 100
