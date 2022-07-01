@@ -57,7 +57,7 @@ re_place=1
 
 # save on destroy
 # if you want the destroy function to recover the file before deleting
-# the encrypted copy set this
+# the encrypted copy set this to 1
 # default=0
 
-leave_in_peace=1
+leave_in_peace=0
