@@ -140,8 +140,8 @@ function fread {
     # example write ./myfile backup 9-05
 
     # assiging pos vars 
-    class=$1
-    shortname=$2
+    class="$1"
+    shortname="$2"
 
     base="$jsondir/$shortname-$class"
     index_long="$base.json"
@@ -152,7 +152,7 @@ function fread {
 
         index_short="$base.jn"
 
-        encrypt -d -i "$index_long" -o "$index_short" -k "$(fetch_keys "systemkey")"
+        encrypt -d -i "$index_long" -o "$index_short" -k "$(cat "$(fetch_keys "systemkey")" )"
     
         # getting variables from the json 
 
@@ -175,7 +175,7 @@ function fread {
         # dont want to leave un encrypted json files out
         # rm -v "$index_short"    
 
-        encrypt -d -i "$path" -o "$olddir" -k "$(fetch_keys "$key")"
+        encrypt -d -i "$path" -o "$olddir" -k "$(cat "$(fetch_keys "systemkey")" )"
 
     else
 
