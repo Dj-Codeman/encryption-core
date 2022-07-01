@@ -162,16 +162,16 @@ function fread {
         # getting variables from the json 
 
         # current path to encrypted file
-        path="$($index_short | jq ' .path' | sed 's/"//g')"
+        path="$(cat "$index_short" | jq ' .path' | sed 's/"//g')"
 
         # key used for the encryption
-        key="$($index_short | jq ' .key' | sed 's/"//g')"
+        key="$(cat "$index_short" | jq ' .key' | sed 's/"//g')"
 
         #uid is the base64 encoding file name
-        uid="$($index_short | jq ' .uid' | sed 's/"//g')"
+        uid="$(cat "$index_short" | jq ' .uid' | sed 's/"//g')"
     
         # where the file originally came from
-        olddir="$($index_short | jq ' .dir' | sed 's/"//g')"
+        olddir="$(cat "$index_short" | jq ' .dir' | sed 's/"//g')"
 
         if [[ $re_place == "0" ]]; then 
             olddir="$datadir/$shortname-$class"
