@@ -106,7 +106,7 @@ function fwrite {
           #json base file variable
           jsonbase="$jsondir/$shortname-$class"
           ## If shortname already exists call a flush ... whatever that will be
-          echo "[\"$shortname\",\"$class\",\"$key\",\"$uid\",\"$output\",\"$dir\"]" | jq -r '{ "name":.[0], "class":.[1], "key":.[2], "uid":.[3], "path":.[4], "dir":.[5] }' > "$jsonbase.jn"
+          echo "[\"$shortname\",\"$class\",\"$key\",\"$uid\",\"$output\",\"$output\"]" | jq -r '{ "name":.[0], "class":.[1], "key":.[2], "uid":.[3], "path":.[4], "dir":.[5] }' > "$jsonbase.jn"
           encrypt -e -i "$jsonbase.jn" -o "$jsonbase.json" -k "$( cat "$(fetch_keys "systemkey")" )"
           if [ -f "$jsonbase.json" ]; then
             echo "index created succefully"
