@@ -36,8 +36,9 @@ logdir="/opt/encore/logs/log"
 # default=100
 key_max=20
 
-# debugging setting keygen counter  
-
+# debugging setting keygen counter
+# 0  
+# CHANGING THIS WILL BREAK STUFF
 key_cur=0
 
 # soft moving

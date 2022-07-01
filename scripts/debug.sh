@@ -6,8 +6,9 @@ function debug_json {
     class=$1
     shortname=$2
 
-    index_long="$jsondir/$shortname-$class.json"
-    index_short="$jsondir/$shortname-$class.jn"
+    base="$jsondir/$shortname-$class"
+    index_long="$base.json"
+    index_short="$base.jn"
 
     #test if json exists
     if [ -f "$index_long" ]; then    

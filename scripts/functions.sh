@@ -143,36 +143,39 @@ function fread {
     class=$1
     shortname=$2
 
-    index_long="$jsondir/$shortname-$class.json"
-    index_short="$jsondir/$shortname-$class.jn"
+    base="$jsondir/$shortname-$class"
+    index_long="$base.json"
 
     #test if json exists
     if [ -f "$index_long" ]; then
 
-        encrypt -d -i "$index_long" -o "$index_short" -k "$( cat "$(fetch_keys "systemkey")" )"
+
+        index_short="$base.jn"
+
+        encrypt -d -i "$index_long" -o "$index_short" -k "$(fetch_keys "systemkey")"
     
         # getting variables from the json 
 
         # current path to encrypted file
-        path="$(cat "$index_short" | jq ' .path' | sed 's/"//g')"
+        path="$($index_short | jq ' .path' | sed 's/"//g')"
 
         # key used for the encryption
-        key="$(cat "$index_short" | jq ' .key' | sed 's/"//g')"
+        key="$($index_short | jq ' .key' | sed 's/"//g')"
 
         #uid is the base64 encoding file name
-        uid="$(cat "$index_short" | jq ' .uid' | sed 's/"//g')"
+        uid="$($index_short | jq ' .uid' | sed 's/"//g')"
     
         # where the file originally came from
-        olddir="$(cat "$index_short" | jq ' .dir' | sed 's/"//g')"
+        olddir="$($index_short | jq ' .dir' | sed 's/"//g')"
 
         if [[ $re_place == "0" ]]; then 
             olddir="$datadir/$shortname-$class"
         fi
 
         # dont want to leave un encrypted json files out
-        rm "$index_short"    
+        # rm -v "$index_short"    
 
-        encrypt -d -i "$path" -o "$olddir" -k "$(cat "$(fetch_keys "$key")" )"
+        encrypt -d -i "$path" -o "$olddir" -k "$(fetch_keys "$key")"
 
     else
 

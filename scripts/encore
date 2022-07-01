@@ -1,4 +1,5 @@
 #!/bin/bash
+version="0.00"
 
 source /opt/encore/scripts/functions.sh
 source /opt/encore/scripts/debug.sh
@@ -29,7 +30,7 @@ if [[ "$1" == "write" ]]; then
     exit 0
     fi
 
-    fwrite "$file" "$class" "$shortname"
+    fwrite "$file" "$shortname" "$class"
 
 elif [[ "$1" == "read" ]]; then
 
@@ -86,6 +87,7 @@ elif [[ "$1" == "debug" ]]; then
     fi
 
 else 
-   show_help
-   exit 0
+    show_help
+    echo "$version"
+    exit 0
 fi
