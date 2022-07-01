@@ -42,10 +42,10 @@ key_max=20
 key_cur=0
 
 # soft moving
-# use cp instead of mv when gatheing files to encrypt
+# set 1 to use cp instead of mv when gatheing files to encrypt
 # default = 0
 
-soft_move=1
+soft_move=0
 
 # re-place file
 # the original path of files are stored when encrypted
