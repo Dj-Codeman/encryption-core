@@ -12,6 +12,8 @@ doas encore write ./test.file debug debug
 echo "Showing vars from json"
 doas encore debug json debug debug > ./results
 
+nano ./results &
+
 echo "destroying test"
 doas encore destroy debug debug
 
@@ -20,6 +22,6 @@ doas rm -rfv /tmp/encryption-core
 
 cd /tmp 
 
-doas git clone https://github.com/Dj-Codeman/encryption-core > /dev/null &
+doas git clone https://github.com/Dj-Codeman/encryption-core 
 
 cat ./results
