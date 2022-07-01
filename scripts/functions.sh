@@ -111,7 +111,7 @@ function fwrite {
           if [ -f "$jsonbase.json" ]; then
             echo "index created succefully"
             
-            # rm "$jsonbase.jn"
+            rm "$jsonbase.jn"
             #------------------------------------------------------------#
             #   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^ UNCOMMENT THAT #
             #   |   |   |   |   |   |   |   |   |   |   | UNCOMMENT THAT #
