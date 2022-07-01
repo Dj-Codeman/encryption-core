@@ -95,7 +95,7 @@ function fwrite {
     if [ -f "$input" ]; then
         echo "File was moved successfully"
 
-        name="$( echo $shortname-$class | base64 )"
+        name="$( echo "$shortname-$class" | base64 )"
         output="$datadir/$name"
         	encrypt -e -i "$input" -o "$output" -k "$( cat "$(fetch_keys $key)" )"
         if [ -f "$output" ]; then
