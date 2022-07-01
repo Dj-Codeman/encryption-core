@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source /opt/encore/config
+
 function debug_json {
     
     # assiging pos vars 
