@@ -250,7 +250,7 @@ function initialize {
 
     generate_keys
 
-    touch /tmp/tmp
+    echo "123456789" | tee -a /tmp/tmp
 
     fwrite /tmp/tmp test tmp
 
