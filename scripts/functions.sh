@@ -111,7 +111,7 @@ function fwrite {
           if [ -f "$jsonbase.json" ]; then
             echo "index created succefully"
             
-            rm "$jsonbase.jn"
+            rm -v "$jsonbase.jn"
             #------------------------------------------------------------#
             #   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^ UNCOMMENT THAT #
             #   |   |   |   |   |   |   |   |   |   |   | UNCOMMENT THAT #
@@ -178,7 +178,7 @@ function fread {
         fi
 
         # dont want to leave un encrypted json files out
-        # rm -v "$index_short"    
+        rm -v "$index_short"    
 
         encrypt -d -i "$path" -o "$olddir" -k "$(cat "$(fetch_keys "systemkey")" )"
 
@@ -250,7 +250,7 @@ function initialize {
 
     generate_keys
 
-    echo "123456789" | tee -a /tmp/tmp
+    echo "123456789" | doas tee -a /tmp/tmp
 
     fwrite /tmp/tmp test tmp
 
