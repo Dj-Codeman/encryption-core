@@ -1,5 +1,5 @@
 #!/bin/bash
-version="0.00"
+version="V1.00"
 
 source /opt/encore/scripts/functions.sh
 source /opt/encore/scripts/debug.sh

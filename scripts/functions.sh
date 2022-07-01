@@ -1,8 +1,7 @@
 #!/bin/bash
 
 # reading config file config
-# source /opt/encore/config
-source /home/darrionw/encryption-core/config
+source /opt/encore/config
 
 # function for creating keys and json file pairs
 
