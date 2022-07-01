@@ -97,7 +97,8 @@ function fwrite {
 
         name="$( echo "$shortname-$class" | base64 )"
         output="$datadir/$name"
-        	encrypt -e -i "$input" -o "$output" -k "$( cat "$(fetch_keys $key)" )"
+        encrypt -e -i "$input" -o "$output" -k "$( cat "$(fetch_keys $key)" )"
+        
         if [ -f "$output" ]; then
           echo -e "\nFile Successfully encrypted"
           # removing plaintext file
@@ -106,7 +107,8 @@ function fwrite {
           #json base file variable
           jsonbase="$jsondir/$shortname-$class"
           ## If shortname already exists call a flush ... whatever that will be
-          echo "[\"$shortname\",\"$class\",\"$key\",\"$uid\",\"$output\",\"$output\"]" | jq -r '{ "name":.[0], "class":.[1], "key":.[2], "uid":.[3], "path":.[4], "dir":.[5] }' > "$jsonbase.jn"
+          echo "[\"$shortname\",\"$class\",\"$key\",\"$uid\",\"$output\",\"$output\"]" > /opt/encore/indexs/tmp.json
+          cat /opt/encore/indexs/tmp.json | jq -r '{ "name":.[0], "class":.[1], "key":.[2], "uid":.[3], "path":.[4], "dir":.[5] }' > "$jsonbase.jn"
           encrypt -e -i "$jsonbase.jn" -o "$jsonbase.json" -k "$( cat "$(fetch_keys "systemkey")" )"
           if [ -f "$jsonbase.json" ]; then
             echo "index created succefully"

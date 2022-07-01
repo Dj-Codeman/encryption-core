@@ -10,7 +10,7 @@ echo "Writing test"
 doas encore write ./test.file debug debug
 
 echo "Showing vars from json"
-doas encore debug json debug debug
+doas encore debug json debug debug > ./results
 
 echo "destroying test"
 doas encore destroy debug debug
@@ -20,8 +20,6 @@ doas rm -rfv /tmp/encryption-core
 
 cd /tmp 
 
-doas git clone https://github.com/Dj-Codeman/encryption-core
+doas git clone https://github.com/Dj-Codeman/encryption-core > /dev/null &
 
-cd /tmp/encryption-core 
-
-doas bash install.sh
+cat ./results
