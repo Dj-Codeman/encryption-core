@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # reading config file config
-source /opt/encore/config
+# source /opt/encore/config
+source /home/darrionw/encryption-core/config
 
 # function for creating keys and json file pairs
 
@@ -69,9 +70,11 @@ function fwrite {
     # example write ./myfile backup 9-05
 
     # picking a random key
-    key="$(shuf -i 1-"$key_max")"
+
+    key_max="$(($key_max-1))"
+    key="$(shuf -i 0-"$key_max" -n 1)"
     # for the stored file name
-    uid="$(fetch_keys | sed 's/[ -]//g' | base64 | head -c 10; )"
+    uid="$(fetch_keys $key | sed 's/[ -]//g' | base64 | head -c 10; )"
 
     # assiging pos vars 
     datapath=$1
@@ -106,9 +109,14 @@ function fwrite {
           # shortname_test
           #json base file variable
           jsonbase="$jsondir/$shortname-$class"
+
           ## If shortname already exists call a flush ... whatever that will be
-          echo "[\"$shortname\",\"$class\",\"$key\",\"$uid\",\"$output\",\"$output\"]" > /opt/encore/indexs/tmp.json
-          cat /opt/encore/indexs/tmp.json | jq -r '{ "name":.[0], "class":.[1], "key":.[2], "uid":.[3], "path":.[4], "dir":.[5] }' > "$jsonbase.jn"
+          shortname=${shortname//$'\n'/} 
+          class=${class//$'\n'/} 
+          key=${key//$'\n'/} 
+          uid=${uid//$'\n'/} 
+          output=${output//$'\n'/} 
+          echo "[\"$shortname\",\"$class\",\"$key\",\"$uid\",\"$datapath\",\"$output\"]" | jq -r '{ "name":.[0], "class":.[1], "key":.[2], "uid":.[3], "path":.[4], "dir":.[5] }' > "$jsonbase.jn"
           encrypt -e -i "$jsonbase.jn" -o "$jsonbase.json" -k "$( cat "$(fetch_keys "systemkey")" )"
           if [ -f "$jsonbase.json" ]; then
             echo "index created succefully"
@@ -164,7 +172,7 @@ function fread {
         # getting variables from the json 
 
         # current path to encrypted file
-        path="$(cat "$index_short" | jq ' .path' | sed 's/"//g')"
+        path="$(cat "$index_short" | jq ' .dir' | sed 's/"//g')"
 
         # key used for the encryption
         key="$(cat "$index_short" | jq ' .key' | sed 's/"//g')"
@@ -173,7 +181,7 @@ function fread {
         uid="$(cat "$index_short" | jq ' .uid' | sed 's/"//g')"
     
         # where the file originally came from
-        olddir="$(cat "$index_short" | jq ' .dir' | sed 's/"//g')"
+        olddir="$(cat "$index_short" | jq ' .path' | sed 's/"//g')"
 
         if [[ $re_place == "0" ]]; then 
             olddir="$datadir/$shortname-$class"
@@ -182,7 +190,7 @@ function fread {
         # dont want to leave un encrypted json files out
         rm -v "$index_short"    
 
-        encrypt -d -i "$path" -o "$olddir" -k "$(cat "$(fetch_keys "systemkey")" )"
+        encrypt -d -i "$path" -o "$olddir" -k "$(cat "$(fetch_keys "$key")" )"
 
     else
 
@@ -209,24 +217,13 @@ function destroy {
     encrypt -d -i "$index_long" -o "$index_short" -k "$(cat "$(fetch_keys "systemkey")" )"
 
     #test if json exists
-    if [ -f "$index_short" ]; then
-    
-        # getting variables from the json 
-
-        # current path to encrypted file
-        path="$(cat "$index_short" | jq ' .path' | sed 's/"//g')"
-
-        #uid is the base64 encoding file name
-        uid="$(cat "$index_short" | jq ' .uid' | sed 's/"//g')"
-
-        if [[ $re_place == "0" ]]; then 
-            olddir="$datadir/$shortname-$class"
-        fi
+    if [ -f "$index_short" ]; then    
 
         # dont want to leave un encrypted json files out
         rm "$index_short"    
-
-        encrypt -d -i "$path" -o "$olddir" -k "$( cat "$(fetch_keys "$key")" )"
+        rm -v "$index_long" "$index_short" "$path" >> "$logdir" 
+        echo "$shortname $class destroyed"
+        exit 0
 
     else
 
@@ -235,9 +232,6 @@ function destroy {
 
     fi
 
-    rm -v "$index_long" "$index_short" "$path" >> "$logdir" 
-    
-    exit 0
 }
 
 function initialize {
@@ -249,10 +243,4 @@ function initialize {
     check_keys
 
     generate_keys
-
-    echo "123456789" | doas tee -a /tmp/tmp
-
-    fwrite /tmp/tmp test tmp
-
-    destroy test tmp 
 }

@@ -34,7 +34,7 @@ logdir="/opt/encore/logs/log"
 
 # key_max the limit of keys to generate
 # default=100
-key_max=20
+key_max=30
 
 # debugging setting keygen counter
 # 0  
@@ -53,11 +53,11 @@ soft_move=0
 # directory
 # default=1
 
-re_place=1
+re_place=0
 
 # save on destroy
 # if you want the destroy function to recover the file before deleting
 # the encrypted copy set this to 1
 # default=0
 
-leave_in_peace=0
+leave_in_peace=1
