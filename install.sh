@@ -24,6 +24,8 @@ mkdir /opt/encore
 
 mv -v ./* /opt/encore/
 
+mv -v /opt/encore/test.sh ./test.sh
+
 chmod +xv /opt/encore/scripts
 
 ln -s /opt/encore/scripts/encore /usr/local/bin/encore
