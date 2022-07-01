@@ -110,7 +110,12 @@ function fwrite {
           encrypt -e -i "$jsonbase.jn" -o "$jsonbase.json" -k "$( cat "$(fetch_keys "systemkey")" )"
           if [ -f "$jsonbase.json" ]; then
             echo "index created succefully"
-            rm "$jsonbase.jn"
+            
+            # rm "$jsonbase.jn"
+            #------------------------------------------------------------#
+            #   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^ UNCOMMENT THAT #
+            #   |   |   |   |   |   |   |   |   |   |   | UNCOMMENT THAT #
+            #------------------------------------------------------------#
 	        unset $uid
             unset $key
           else
