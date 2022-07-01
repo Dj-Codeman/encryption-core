@@ -17,3 +17,5 @@ doas rm -rfv /tmp/encryption-core
 cd /tmp
 
 doas git clone https://github.com/Dj-Codeman/encryption-core 
+
+cd encryption-core
