@@ -207,9 +207,7 @@ function destroy {
     encrypt -d -i "$index_long" -o "$index_short" -k "$(cat "$(fetch_keys "systemkey")" )"
 
     #test if json exists
-    if [ -f "$index_long" ]; then
-
-        encrypt -d -i "$index_long" -o "$index_short" -k "$(cat "$(fetch_keys "systemkey")" )"
+    if [ -f "$index_short" ]; then
     
         # getting variables from the json 
 
