@@ -1,20 +1,15 @@
 #!/bin/bash
 
-echo "test data" | doas tee -a ./test.file
-
 doas bash install.sh
 
 echo " initializing " 
 doas encore initialize
 
-echo "Writing test"
-doas encore write ./test.file debug debug
-
 echo "Showing vars from json"
-doas encore debug json debug debug > /tmp/results
+doas encore debug json test tmp
 
 echo "destroying test"
-doas encore destroy debug debug
+doas encore destroy test tmp
 
 echo "redownloading"
 doas rm -rfv /tmp/encryption-core 
