@@ -10,7 +10,7 @@ doas encore debug json debug debug
 
 doas encore destroy debug debug
 
-doas rm /tmp/encryption-core 
+doas rm -rfv /tmp/encryption-core 
 
 cd /tmp 
 
