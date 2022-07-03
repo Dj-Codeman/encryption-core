@@ -98,7 +98,7 @@ if [ -f "/opt/encore/scripts/encore" ]; then
         echo -e "I know whats wrong with it \n"
         echo -e "It aint got no config int \n"
 
-        exit 1
+        # exit 1
 
     fi
 
@@ -108,7 +108,7 @@ relazy
 
 echo "Oh no ?"
 
-exit 1
+# exit 1
 
 fi
 
