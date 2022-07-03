@@ -13,7 +13,7 @@ if [ -f "/opt/encore/scripts/encore" ]; then
 
     if [ -f "/opt/encore/config" ]; then 
 
-        source "/opt/encore/config"
+        source "/opt/encore/scripts/function.php"
 
         if [ "$1" == "update" ]; then
 
