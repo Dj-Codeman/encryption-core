@@ -1,5 +1,5 @@
 #!/bin/bash
-version="V1.00"
+version="V1.25"
 
 source /opt/encore/scripts/functions.sh
 source /opt/encore/scripts/debug.sh
@@ -86,6 +86,8 @@ elif [[ "$1" == "debug" ]]; then
     echo "Dont know where to start do you ?"
     fi
 
+elif [[ "$1" == "update" ]]; then
+bash /opt/encore/install.sh update
 else 
     show_help
     echo "$version"

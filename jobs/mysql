@@ -1,8 +1,0 @@
-#!/bin/bash
-
-date="$(date +%m-%d)"
-pass="******"
-
-mysqldump --all-databases -u ****** -p"$pass" -h 192.168.0.6 > "/mnt/import/$date.sql"
-
-store "/mnt/import/$date.sql" "$date.sql" database

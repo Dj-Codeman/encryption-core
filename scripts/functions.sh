@@ -71,7 +71,7 @@ function fwrite {
     # picking a random key
 
     key_max="$(($key_max-1))"
-    key="$(shuf -i 0-"$key_max" -n 1)"
+    key="$(shuf -i "$key_cur"-"$key_max" -n 1)"
     # for the stored file name
     uid="$(fetch_keys $key | sed 's/[ -]//g' | base64 | head -c 10; )"
 
@@ -112,7 +112,7 @@ function fwrite {
           ## If shortname already exists call a flush ... whatever that will be
           shortname=${shortname//$'\n'/} 
           class=${class//$'\n'/} 
-          key=${key//$'\n'/} 
+          key=${key//$'\n'/} # if the variable isn't filtered multiple keys are copyed to the json file
           uid=${uid//$'\n'/} 
           output=${output//$'\n'/} 
           echo "[\"$shortname\",\"$class\",\"$key\",\"$uid\",\"$datapath\",\"$output\"]" | jq -r '{ "name":.[0], "class":.[1], "key":.[2], "uid":.[3], "path":.[4], "dir":.[5] }' > "$jsonbase.jn"
@@ -121,11 +121,10 @@ function fwrite {
             echo "index created succefully"
             
             rm -v "$jsonbase.jn"
-            #------------------------------------------------------------#
-            #   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^ UNCOMMENT THAT #
-            #   |   |   |   |   |   |   |   |   |   |   | UNCOMMENT THAT #
-            #------------------------------------------------------------#
 	        unset $uid
+
+            # /opt/encore/function.sh: line 129: unset: 'key number' not a valid identifier ?
+            # on ubuntu 16.04 lts 
             unset $key
           else
             clear
@@ -242,4 +241,8 @@ function initialize {
     check_keys
 
     generate_keys
+}
+
+function relazy {
+    echo "Hello out there" > /dev/null
 }

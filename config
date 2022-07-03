@@ -34,11 +34,13 @@ logdir="/opt/encore/logs/log"
 
 # key_max the limit of keys to generate
 # default=100
+
 key_max=30
 
-# debugging setting keygen counter
-# 0  
-# CHANGING THIS WILL BREAK STUFF
+# Works like a key min value
+# by key_cur and key_max the range from which keys are picked
+# can be changed
+
 key_cur=0
 
 # soft moving
