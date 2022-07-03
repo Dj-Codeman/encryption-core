@@ -29,7 +29,7 @@ if [ -f "/opt/encore/scripts/encore" ]; then
             key_max=10
             key_cur=0
 
-            test_key_num="$(shuf -i "$key_cur"-"$key_max" -n 1)"
+            test_key_num="$(shuf -i $key_cur-$key_max -n 1)"
 
             # where the file originally came from
             test_key="$jsondir/$test_key_num.json"
@@ -48,7 +48,7 @@ if [ -f "/opt/encore/scripts/encore" ]; then
 
                 encore write /tmp/encore.tmp system test
 
-                $old_val_lip="$(grep "leave_in_peace=" /opt/encore/config )" 
+                old_val_lip="$(grep "leave_in_peace=" /opt/encore/config )" 
 
                     if [[ "$old_val_lip" == "leave_in_peace=1" ]]; then    
                         sed -i 's/leave_in_peace=1/leave_in_peace=0/g' /opt/encore/config
