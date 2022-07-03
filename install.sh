@@ -114,9 +114,12 @@ if [ -f "/opt/encore/scripts/encore" ]; then
             fi
 
             if [[ -f /tmp/encryption-core/scripts/encrypt ]]; then
-            relazy
+                relazy
+                echo -e "encrypt scripts found"
             else 
-            wget -i https://raw.githubusercontent.com/fastsitephp/fastsitephp/master/scripts/shell/bash/encrypt.sh
+                wget -i https://raw.githubusercontent.com/fastsitephp/fastsitephp/master/scripts/shell/bash/encrypt.sh \
+                > /tmp/encore/scripts/encrypt
+                mv 
             fi 
 
             rm -rfv /opt/encore
@@ -125,9 +128,9 @@ if [ -f "/opt/encore/scripts/encore" ]; then
 
             mv -v ./* /opt/encore/
 
-            mv -v /opt/encore/test.sh ./test.sh
+            # mv -v /opt/encore/test.sh ./test.sh
 
-            chmod +xv /opt/encore/scripts
+            chmod +xv /opt/encore/scripts/*
 
             ln -s /opt/encore/scripts/encore /usr/local/bin/encore
 
