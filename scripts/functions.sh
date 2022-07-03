@@ -199,7 +199,7 @@ function fread {
 
 
 }
-
+ 
 function destroy {  
     
     class=$1
