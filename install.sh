@@ -17,7 +17,7 @@ if [ -f "/opt/encore/scripts/encore" ]; then
 
     if [ -f "/opt/encore/config" ]; then 
 
-        source "/opt/encore/scripts/functions"
+        source "/opt/encore/scripts/functions.sh"
 
         if [ "$1" == "update" ]; then
 
@@ -184,7 +184,9 @@ mv -v ./* /opt/encore/
 
 # mv -v /opt/encore/test.sh ./test.sh
 
-chmod +xv /opt/encore/scripts/*
+chmod +xv /opt/encore/scripts/encore
+chmod +xv /opt/encore/scripts/encrypt
+chmod +xv /opt/encore/install.sh
 
 ln -s /opt/encore/scripts/encore /usr/local/bin/encore
 
