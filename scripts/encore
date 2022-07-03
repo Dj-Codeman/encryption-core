@@ -88,6 +88,7 @@ elif [[ "$1" == "debug" ]]; then
 
 elif [[ "$1" == "update" ]]; then
 bash /opt/encore/install.sh update
+#
 else 
     show_help
     echo "$version"
