@@ -17,7 +17,7 @@ if [ -f "/opt/encore/scripts/encore" ]; then
 
     if [ -f "/opt/encore/config" ]; then 
 
-        source "/opt/encore/scripts/functions.php"
+        source "/opt/encore/scripts/functions"
 
         if [ "$1" == "update" ]; then
 
@@ -156,10 +156,48 @@ if [ -f "/opt/encore/scripts/encore" ]; then
 
 else 
 
-relazy
+# proceed to regular install
+# jr and jp are the only dependencies for json editing
+# I only use ubuntu and arch btw
+    if [[ -f "/usr/bin/pacman" ]]; then 
+        pacman -Sy jr jp vim
+    elif [[ -f "/usr/bin/apt" ]]; then
+        apt-get -y install jr jp
+    else 
+        echo -e "small problem I dont know how to install dependencies for you"
+        echo -e "all you need is jq and jr for json manipulation xxd and vim-commons"
+        exit 1
+    fi
 
-echo "Oh no ?"
+    if [[ -f /tmp/encryption-core/scripts/encrypt ]]; then
+        relazy
+        echo -e "encrypt scripts found"
+    else 
+        wget -i https://raw.githubusercontent.com/fastsitephp/fastsitephp/master/scripts/shell/bash/encrypt.sh > /tmp/encore/scripts/encrypt
+    fi 
 
-# exit 1
+rm -rfv /opt/encore
+
+mkdir /opt/encore
+
+mv -v ./* /opt/encore/
+
+# mv -v /opt/encore/test.sh ./test.sh
+
+chmod +xv /opt/encore/scripts/*
+
+ln -s /opt/encore/scripts/encore /usr/local/bin/encore
+
+ln -s /opt/encore/scripts/encrypt /usr/local/bin/encrypt
+
+encore initialize
+
+chown -Rfv $USER:$USER /opt/encore
+
+clear 
+
+echo "encore installed / updated sucessfully"
+
+exit 0
 
 fi
