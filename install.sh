@@ -32,7 +32,7 @@ if [ -f "/opt/encore/scripts/encore" ]; then
             test_key_num="$(shuf -i "$key_cur"-"$key_max" -n 1)"
 
             # where the file originally came from
-            test_key="$keydir/$test_key_num.json"
+            test_key="$jsondir/$test_key_num.json"
         
             test_path="$(cat "$test_key" | jq ' .location' | sed 's/"//g')"
 
@@ -128,7 +128,8 @@ if [ -f "/opt/encore/scripts/encore" ]; then
 
             # mv -v /opt/encore/test.sh ./test.sh
 
-            chmod +xv /opt/encore/scripts/*
+            chmod +x /opt/encore/*
+            chmod +x /opt/encore/scripts/*
 
             ln -s /opt/encore/scripts/encore /usr/local/bin/encore
 
@@ -184,9 +185,8 @@ mv -v ./* /opt/encore/
 
 # mv -v /opt/encore/test.sh ./test.sh
 
-chmod +xv /opt/encore/scripts/encore
-chmod +xv /opt/encore/scripts/encrypt
-chmod +xv /opt/encore/install.sh
+    chmod +x /opt/encore/*
+    chmod +x /opt/encore/scripts/*
 
 ln -s /opt/encore/scripts/encore /usr/local/bin/encore
 
