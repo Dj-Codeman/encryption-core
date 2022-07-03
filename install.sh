@@ -9,28 +9,28 @@ if [[ "$person" != "root" ]]; then
     exit 1
 fi
 
-if [[ -f "/opt/encore/encore" ]]; then
+if [ -f "/opt/encore/scripts/encore" ]; then
 
-    if [[ -f "/opt/encore/config" ]]; then 
+    if [ -f "/opt/encore/config" ]; then 
 
-    source "/opt/encore/config"
+        source "/opt/encore/config"
 
-        if [[ "$1" == "update" ]]; then
+        if [ "$1" == "update" ]; then
 
-        relazy
+            relazy
 
-        test_file="$jsondir/$shortname-$class.json"
+            test_file="$jsondir/$shortname-$class.json"
 
 
-        key_max=10
-        key_cur=0
+            key_max=10
+            key_cur=0
 
-        test_key_num="$(shuf -i "$key_cur"-"$key_max" -n 1)"
+            test_key_num="$(shuf -i "$key_cur"-"$key_max" -n 1)"
 
-        # where the file originally came from
-        test_key="$keydir/$test_key_num.json"
+            # where the file originally came from
+            test_key="$keydir/$test_key_num.json"
         
-        test_path="$(cat "$test_key" | jq ' .location' | sed 's/"//g')"
+            test_path="$(cat "$test_key" | jq ' .location' | sed 's/"//g')"
 
             if [[ -f "$test_path" ]]; then 
 
@@ -94,7 +94,21 @@ if [[ -f "/opt/encore/encore" ]]; then
 
         #### WHAT ABOUT THE OLD DIRECTORIES???
         fi
+    else 
+        echo -e "I know whats wrong with it \n"
+        echo -e "It aint got no config int \n"
+
+        exit 1
+
     fi
+
+else 
+
+relazy
+
+echo "Oh no ?"
+
+exit 1
 
 fi
 
