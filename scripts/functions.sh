@@ -214,18 +214,22 @@ function destroy {
 
     encrypt -d -i "$index_long" -o "$index_short" -k "$(cat "$(fetch_keys "systemkey")" )"
 
+    # current path to encrypted file
+    path="$(cat "$index_short" | jq ' .dir' | sed 's/"//g')"
+
     #test if json exists
     if [ -f "$index_short" ]; then    
 
         # dont want to leave un encrypted json files out
-        rm "$index_short"    
+
         rm -v "$index_long" "$index_short" "$path" >> "$logdir" 
         echo "$shortname $class destroyed"
         exit 0
 
     else
 
-        echo "$index_long does not exist"
+        echo "$index_short does not exist" >> "$logdir"
+        echo "The decryption failed check config file and index dir and try again"
         exit 1
 
     fi

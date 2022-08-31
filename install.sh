@@ -23,7 +23,7 @@ if [ -f "/opt/encore/scripts/encore" ]; then
 
             relazy
 
-            test_file="$jsondir/$shortname-$class.json"
+            # test_file="$jsondir/$shortname-$class.json"
 
 
             key_max=10
@@ -42,18 +42,25 @@ if [ -f "/opt/encore/scripts/encore" ]; then
 
                 echo -e "Creating some random data \n"
 
-                test_data="$(fetch_keys $test_$key | sed 's/[ -]//g' | base64 | head -c 200; )"
+                test_data="$(fetch_keys $test_key_number | base64 )"
             
-                echo "$test_data" | doas tee -a /tmp/encore.tmp
+                # ? doas tee -a /tmp/encore is doas a dependency
+                echo "$test_data" | tee -a /tmp/encore.tmp
 
                 encore write /tmp/encore.tmp system test
 
-                old_val_lip="$(grep "leave_in_peace=" /opt/encore/config )" 
+                old_val_lip="$(grep -c "leave_in_peace=1" /opt/encore/config )" 
 
-                    if [[ "$old_val_lip" == "leave_in_peace=1" ]]; then    
+                    if [[ "$old_val_lip" -gt "0" ]]; then    
                         sed -i 's/leave_in_peace=1/leave_in_peace=0/g' /opt/encore/config
                     fi
-        
+
+                old_val_verb="$(grep -c "leave_in_peace=1" /opt/encore/config )" 
+                    
+                    if [[ "$old_val_verb" -eq "0" ]]; then
+                        echo -e "The config file has been modified \n"
+                        # echo -e "The config file has been modified \n"
+                    fi
         
                     encore destroy system test
 
@@ -61,10 +68,14 @@ if [ -f "/opt/encore/scripts/encore" ]; then
 
 
                 echo -e "Damn it looks like you installed encore already thank you \n"
-                echo -e "Also from my small test it looks like your installation is file \n"
+                echo -e "Also from my small test it looks like your installation is fine \n"
                 echo -e "Phew. well then what can i do for you"
 
-                read options
+                read -r -p "Update or Delete" options
+
+                # TODO add option to update the script
+                # TODO add option to update and keep existing keys and secrets
+                # TODO add uninstall option
 
                 echo -e "damn $options thats a great choice but uuhhhh actually theres isnt enough code for that \n"
                 echo -e "Sorry"
@@ -98,18 +109,23 @@ if [ -f "/opt/encore/scripts/encore" ]; then
 
                 #### WHAT ABOUT THE OLD DIRECTORIES???
         else
+
             relazy
 
             # proceed to regular install
             # jr and jp are the only dependencies for json editing
             # I only use ubuntu and arch btw
+
             if [[ -f "/usr/bin/pacman" ]]; then 
                 pacman -Sy jr jp vim
             elif [[ -f "/usr/bin/apt" ]]; then
                 apt-get -y install jr jp
+            elif [[ -f "/usr/bin/yum" ]]; then
+            # ! NOT TESTED
+                yum install jr jp xxd vim-common -y
             else 
                 echo -e "small problem I dont know how to install dependencies for you"
-                echo -e "all you need is jq and jr for json manipulation xxd and vim-commons"
+                echo -e "all you need is jq for json manipulation xxd and vim-commons"
                 exit 1
             fi
 
