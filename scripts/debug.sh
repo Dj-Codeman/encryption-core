@@ -33,10 +33,15 @@ function debug_json {
 
             echo -e "variables pulled from json file\n"
 
-            echo -e "$path\n"
-            echo -e "$key\n"
-            echo -e "$uid\n"
-            echo -e "$olddir\n"
+            echo -e "Original path: $path\n"
+            echo -e "Key used for enc: $key\n"
+            echo -e "Unique id: $uid\n"
+            echo -e "Location of the enc file: $olddir\n"
+            if [[ -f "$olddir" ]];  then
+                echo "Encrypted file exists" >> $logdir
+            else
+                echo "The file: $olddir does not exist"
+            fi
         fi
         echo "Variables from json\n"
         rm -v "$index_short"

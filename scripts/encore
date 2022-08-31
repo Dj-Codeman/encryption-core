@@ -1,11 +1,22 @@
 #!/bin/bash
-version="V1.50 *patched"
+version="V1.50"
 
 source /opt/encore/scripts/functions.sh
 source /opt/encore/scripts/debug.sh
 
 function show_help {
     echo "Help your self foo"
+    echo -e "# encore [write] [read] [destroy] [initialize] \n"
+    echo -e "[update] [version] \n"
+    echo -e "# encore write FILE name owner \n"
+    echo -e "# encore read name owner \n"
+    echo -e "# encore destroy name owner \n"
+    echo -e "# encore initialize **WARNING THIS WILL DELETE ANY STORED DATA AND KEYS** \n"
+    if [[ "$version" == "V1.50" ]]; then
+    echo -e "# encore update just performs a wellness test"
+    else  
+    echo -e "# encore update performs system wellness test then downloads the lates version of encore"
+    fi 
 }
 
 
