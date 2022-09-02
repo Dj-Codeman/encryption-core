@@ -89,9 +89,9 @@ function fwrite {
 
     # checking for soft move
     if [ "$soft_move" == "0" ]; then
-        mv -v "$(realpath "$datapath")" "$input"
+        mv -v "$(realpath "$datapath")" "$input" >> /var/log/crypt
     else
-        cp -v "$(realpath "$datapath")" "$input"
+        cp -v "$(realpath "$datapath")" "$input" >> /var/log/crypt
     fi
 
     if [ -f "$input" ]; then
@@ -104,7 +104,7 @@ function fwrite {
         if [ -f "$output" ]; then
             echo -e "\nFile Successfully encrypted"
             # removing plaintext file
-            rm -v "$input"
+            rm -v "$input" >> /var/log/crypt
             # shortname_test
             #json base file variable
             jsonbase="$jsondir/$shortname-$class"
@@ -120,7 +120,7 @@ function fwrite {
             if [ -f "$jsonbase.json" ]; then
                 echo "index created succefully"
 
-                rm -v "$jsonbase.jn"
+                rm -v "$jsonbase.jn" >> /var/log/crypt
                 unset $uid
 
                 # /opt/encore/function.sh: line 129: unset: 'key number' not a valid identifier ?
