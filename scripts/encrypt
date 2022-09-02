@@ -92,13 +92,13 @@ main ()
     validate_files
     validate_key
     if [[ "${action}" == "encrypt" ]]; then
-        echo "Encrypting file [${in_file}] to [${out_file}] at [$(date)]"
+        echo "Encrypting file [${in_file}] to [${out_file}] at [$(date)]" >> /var/log/crypt
         encrypt
-        msg="Success, file [${in_file}] has been encrypted to [${out_file}]."
+        msg="Success, file [${in_file}] has been encrypted to [${out_file}]." >> /var/log/crypt
     else
-        echo "Decrypting file [${in_file}] to [${out_file}] at [$(date)]"
+        echo "Decrypting file [${in_file}] to [${out_file}] at [$(date)]" >> /var/log/crypt
         decrypt
-        msg="Success, file [${in_file}] has been decrypted to [${out_file}]."
+        msg="Success, file [${in_file}] has been decrypted to [${out_file}]." >> /var/log/crypt
     fi
     time_taken=$(format_time $SECONDS)
     echo "${msg} Time Taken: [${time_taken}]"
@@ -398,9 +398,10 @@ validate_files ()
 
     # Prompt to overwrite in case the output file already exists
     if [[ -f "${out_file}" ]]; then
-        echo "The file to create [${out_file}] already exists."
-        echo "Do you want to overwite the file? Type [yes] to continue:"
-        read -r overwite_file
+        # echo "The file to create [${out_file}] already exists."
+        # echo "Do you want to overwite the file? Type [yes] to continue:"
+        # read -r overwite_file
+        overwite_file="yes"
         if [[ "${overwite_file}" != "yes" ]]; then
             >&2 echo "Ending script, no file was created because it already exists."
             exit $ERR_DONT_OVERWITE
