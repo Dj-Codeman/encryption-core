@@ -92,16 +92,17 @@ main ()
     validate_files
     validate_key
     if [[ "${action}" == "encrypt" ]]; then
-        echo "Encrypting file [${in_file}] to [${out_file}] at [$(date)]" >> /var/log/crypt
+        echo -n "\n . \n"
         encrypt
-        msg="Success, file [${in_file}] has been encrypted to [${out_file}]." >> /var/log/crypt
+        msg="."
     else
-        echo "Decrypting file [${in_file}] to [${out_file}] at [$(date)]" >> /var/log/crypt
+        echo -e ". \n"
         decrypt
-        msg="Success, file [${in_file}] has been decrypted to [${out_file}]." >> /var/log/crypt
+        # msg="Success, file [${in_file}] has been decrypted to [${out_file}]." >> /var/log/crypt
+        msg="."
     fi
     time_taken=$(format_time $SECONDS)
-    echo "${msg} Time Taken: [${time_taken}]"
+    echo -e ". \n"
 }
 
 # -----------------------------------------------------------------------------

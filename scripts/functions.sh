@@ -104,7 +104,7 @@ function fwrite {
         if [ -f "$output" ]; then
             echo -e "\nFile Successfully encrypted"
             # removing plaintext file
-            rm -v "$input" >> /var/log/crypt
+            rm $input >> /dev/null
             # shortname_test
             #json base file variable
             jsonbase="$jsondir/$shortname-$class"
@@ -185,7 +185,7 @@ function fread {
         fi
 
         # dont want to leave un encrypted json files out
-        rm -v "$index_short"
+        rm "$index_short" > /dev/null
 
         encrypt -d -i "$path" -o "$olddir" -k "$(cat "$(fetch_keys "$key")")"
 
