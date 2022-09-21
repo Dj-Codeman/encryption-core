@@ -1,0 +1,12 @@
+HI.
+
+I found this script: https://www.fastsitephp.com/es/documents/file-encryption-bash
+
+It uses openssl to encrypt files in a bash script.
+
+I wanted to use this in scripts to keep encrypted files and keys on a system
+
+
+I'm Currently trying to combine the "encore" and "encrypt" scripts into one.
+
+while i learn how to do that the encore script is a sort of layer to give me the syntax that i want.
