@@ -120,12 +120,14 @@ function fwrite {
             if [ -f "$jsonbase.json" ]; then
                 echo "index created succefully"
 
-                rm -v "$jsonbase.jn" >> /var/log/crypt
+                rm -v "$jsonbase.jn" >> $logdir
                 unset $uid
 
                 # /opt/encore/function.sh: line 129: unset: 'key number' not a valid identifier ?
                 # on ubuntu 16.04 lts
                 unset $key
+                echo -e "\nDone"
+                exit 0
             else
                 clear
                 echo "An error occoured creating index"
@@ -133,6 +135,7 @@ function fwrite {
             fi
         else
             echo "An error occoured when encrypting file."
+            exit 102
         fi
     else
         echo "File was not copyed check freespace and try again"

@@ -1,22 +1,22 @@
 #!/bin/bash
-version="V1.50 *patched
-"
+version="V1.75"
 
 source /opt/encore/scripts/functions.sh
 source /opt/encore/scripts/debug.sh
 
 function show_help {
     echo "Help your self foo"
-    echo -e "# encore [write] [read] [destroy] [initialize] \n"
+    echo -e "# encore [write] [read] [destroy] [initialize]"
     echo -e "[update] [version] \n"
     echo -e "# encore write FILE name owner \n"
     echo -e "# encore read name owner \n"
     echo -e "# encore destroy name owner \n"
     echo -e "# encore initialize **WARNING THIS WILL DELETE ANY STORED DATA AND KEYS** \n"
+    echo -e "# encore  backup *Not implemented yet*"
     if [[ "$version" == "V1.50" ]]; then
-    echo -e "# encore update just performs a wellness test"
+        echo -e "# encore update just performs a wellness test"
     else  
-    echo -e "# encore update performs system wellness test then downloads the lates version of encore"
+        echo -e "# encore update performs system wellness test then downloads the lates version of encore"
     fi 
 }
 
@@ -28,18 +28,18 @@ if [[ "$1" == "write" ]]; then
     class="$4"
 
     if [[ -z "$file" ]]; then
-    echo "No file given"
-    exit 0
+        echo -e "No file given \n"
+        exit 1
     fi
 
     if [[ -z "$shortname" ]]; then
-    echo "No shortname given"
-    exit 0
+        echo -e "No shortname given \n"
+        exit 1
     fi
 
     if [[ -z "$class" ]]; then
-    echo "No class given"
-    exit 0
+        echo -e "No class given \n"
+        exit 1
     fi
 
     fwrite "$file" "$shortname" "$class"
@@ -50,13 +50,13 @@ elif [[ "$1" == "read" ]]; then
     class="$3"
     
     if [[ -z "$shortname" ]]; then
-    echo "No shortname given"
-    exit 0
+        echo -e "No shortname given \n"
+        exit 1
     fi
 
     if [[ -z "$class" ]]; then
-    echo "No class given"
-    exit 0
+        echo -e "No class given \n"
+        exit 1
     fi
 
     fread "$shortname" "$class"
@@ -67,13 +67,13 @@ elif [[ "$1" == "destroy" ]]; then
     class="$3"
 
     if [[ -z "$shortname" ]]; then
-    echo "No shortname given"
-    exit 0
+        echo -e "No shortname given \n"  
+        exit 1
     fi
 
     if [[ -z "$class" ]]; then
-    echo "No class given"
-    exit 0
+        echo -e "No class given \n"
+        exit 1
     fi
 
     destroy "$shortname" "$class"
@@ -93,14 +93,16 @@ elif [[ "$1" == "debug" ]]; then
     debug_json "$shortname" "$class"
 
     elif [[ -z "$3" ]]; then
-    echo "morecode"
+        echo -e "morecode \n"
+        exit 0
     else
-    echo "Dont know where to start do you ?"
+        echo -e "Dont know where to start do you ? \n"
+        exit 0
     fi
 
 elif [[ "$1" == "update" ]]; then
 
-bash /opt/encore/install.sh update
+    bash /opt/encore/install.sh
 
 elif [[ "$1" == "version" ]]; then
     echo "$version"
