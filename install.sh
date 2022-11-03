@@ -9,7 +9,7 @@
 # P is a patched version in development because I dont get how branches work on git yet
 
 major=1
-Nversion="P1.83"
+Nversion="P1.84"
 
 function update() {
     source /opt/encore/scripts/functions.sh
@@ -74,6 +74,8 @@ function update() {
         fi
 
         git -C /tmp clone https://github.com/Dj-Codeman/encryption-core
+
+        sed -i "s/$rversion/$new_ver/g" /tmp/encryption-core/scripts/functions.sh
 
         cp -v /tmp/encryption-core/install.sh /opt/encore/install.sh
         cp -v /tmp/encryption-core/scripts/debug.sh /opt/encore/scripts/debug.sh
