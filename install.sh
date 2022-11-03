@@ -60,20 +60,19 @@ function update() {
         fi
         echo "Your current install is valid we'll update and run this test again"
 
-        cd /tmp
-        if [[ -d ./encryption-core ]]; then 
-            rm -rfv ./encryption-core >> $logdir
+        if [[ -d /tmp/encryption-core ]]; then 
+            rm -rfv /tmp/encryption-core >> $logdir
         else 
             relazy
         fi
 
-        git pull https://github.com/Dj-Codeman/encryption-core
-        cd encryption-core
+        git -C /tmp clone https://github.com/Dj-Codeman/encryption-core
 
-        cp -v ./install.sh /opt/encore/install.sh
-        cp -v ./scripts/debug.sh /opt/encore/debug.sh
-        cp -v ./scripts/encrypt /opt/encore/encrypt
-        cp -v ./scripts/functions.sh /opt/encore/functions.sh
+        cp -v /tmp/encryption-core/install.sh /opt/encore/install.sh
+        cp -v /tmp/encryption-core/scripts/debug.sh /opt/encore/scripts/debug.sh
+        cp -v /tmp/encryption-core/scripts/encore /opt/encore/scripts/encore
+        cp -v /tmp/encryption-core/scripts/encrypt /opt/encore/scripts/encrypt
+        cp -v /tmp/encryption-core/scripts/functions.sh /opt/encore/scripts/functions.sh
 
         #############
         # SECOND TEST
