@@ -125,6 +125,12 @@ function update() {
             #add section for restoring from the backups
             #zip the backup 
             rversion="$(encore version)"
+            if [[ "$rversion" != "$new_ver" ]]; then
+                sed -i "s/$rversion/$new_ver/g" /opt/encore/scripts/functions.sh
+            else
+                relazy
+            fi
+
             echo "Congrats encore has been updated your new version is $rversion"
             exit 0
         fi
