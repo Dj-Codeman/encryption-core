@@ -1,4 +1,5 @@
 #!/bin/bash
+version="V1.75"
 
 # reading config file config
 source /opt/encore/config

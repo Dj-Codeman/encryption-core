@@ -1,6 +1,4 @@
 #!/bin/bash
-version="V1.75"
-
 source /opt/encore/scripts/functions.sh
 source /opt/encore/scripts/debug.sh
 

@@ -5,14 +5,18 @@
 # major 1 will throw an error if current version is * PATCHED or more then .25 diff from
 # the installed version
 
+# V is version number
+# P is a patched version in development because I dont get how branches work on git yet
+
 major=1
-Nversion="V1.75"
+Nversion="P1.75"
 
 function update() {
     source /opt/encore/scripts/functions.sh
     old_ver=$version
     new_ver=$Nversion
     ## verson verification
+    # Check if there is a P ignore if update is ran with force
     if [ "$old_ver" != "$new_ver" ]; then
 
         echo "Version compatability check not implemented"
@@ -108,6 +112,8 @@ function update() {
             # sed -i 's/leave_in_peace=0/'"'$old_val_lip'"'/g' /opt/encore/config
 
             echo "The update was sucessful im just cleaning up a few things"
+            # Restore from the backups 
+
             if [[ "$old_val_lip" -gt "0" ]]; then
                 sed -i 's/leave_in_peace=1/leave_in_peace=0/g' /opt/encore/config
             else
