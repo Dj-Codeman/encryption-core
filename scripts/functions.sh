@@ -191,14 +191,15 @@ function fread {
 
         if [[ "$version" != "$wversion" ]]; then
             echo -e "The version of encore that wrote this file is not the same one that is reading this file"
-            echo -e "\nThis might cause errors I recommend unencrypting and destroying this copy and the re-encrypting it"
+            echo -e "This might cause errors I recommend unencrypting and destroying this copy and the re-encrypting it"
         fi
 
         # dont want to leave un encrypted json files out
-        rm "$index_short" > /dev/null
+        rm "$index_short" >> $logdir
 
         encrypt -d -i "$path" -o "$olddir" -k "$(cat "$(fetch_keys "$key")")" >> $logdir
 
+        echo -e "DONE"
     else
 
         echo "$index_long does not exist"
