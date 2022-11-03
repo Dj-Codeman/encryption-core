@@ -75,7 +75,7 @@ function update() {
 
         git -C /tmp clone https://github.com/Dj-Codeman/encryption-core
 
-        sed -i "s/$rversion/$new_ver/g" /tmp/encryption-core/scripts/functions.sh
+        sed -i "s/Vx.xx/$new_ver/g" /tmp/encryption-core/scripts/functions.sh
 
         cp -v /tmp/encryption-core/install.sh /opt/encore/install.sh
         cp -v /tmp/encryption-core/scripts/debug.sh /opt/encore/scripts/debug.sh
