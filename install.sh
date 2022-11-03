@@ -1,211 +1,160 @@
 #!/bin/bash
 
-function relazy {
-    echo "Hello out there" >/dev/null
-}
+# The version variable along with the major flag will be used to determine if the
+# current version of encore installed is compatible with this version
+# major 1 will throw an error if current version is * PATCHED or more then .25 diff from
+# the installed version
 
-#Who is running this
+major=1
+Nversion="V1.75"
 
-person="$(whoami)"
+function update() {
+    source /opt/encore/scripts/functions.sh
+    old_ver=$version
+    new_ver=$Nversion
+    ## verson verification
+    if [ "$old_ver" != "$new_ver" ]; then
 
-if [[ "$person" != "root" ]]; then
-    echo "This script must be run as root"
-    exit 1
-fi
+        echo "Version compatability check not implemented"
 
-if [ -f "/opt/encore/scripts/encore" ]; then
+    fi
+    # verifying the install works correctly
 
-    if [ -f "/opt/encore/config" ]; then
+    # functionallity test
+    test_key_num="$(shuf -i $key_cur-$key_max -n 1)"
+    
+    # where the file originally came from
+    test_key="$jsondir/$test_key_num.json"
 
-        source "/opt/encore/scripts/functions.sh"
+    # test_path="$(cat "$test_key" | jq ' .location' | sed 's/"//g')"
+    test_path="$(cat "$test_key" | jq ' .location' | sed 's/"//g' )"
+    if [[ -f "$test_path" ]]; then
 
-        if [ "$1" == "update" ]; then
+        echo -e "Keys present checking validity \n"
+        echo -e "Creating some random data \n"
+        test_data="$(fetch_keys systemkey | base64)"
 
-            relazy
+        echo "$test_data" | tee -a /tmp/encore.tmp
+        encore write /tmp/encore.tmp system te-st >> $logdir
+        old_val_lip="$(grep -c "leave_in_peace=1" /opt/encore/config)"
 
-            # test_file="$jsondir/$shortname-$class.json"
-
-            key_max=10
-            key_cur=0
-
-            test_key_num="$(shuf -i $key_cur-$key_max -n 1)"
-
-            # where the file originally came from
-            test_key="$jsondir/$test_key_num.json"
-
-            test_path="$(cat "$test_key" | jq ' .location' | sed 's/"//g')"
-
-            if [[ -f "$test_path" ]]; then
-
-                echo -e "Key presents verified - checking if its valid \n"
-
-                echo -e "Creating some random data \n"
-
-                test_data="$(fetch_keys $test_key_number | base64)"
-
-                # ? doas tee -a /tmp/encore is doas a dependency
-                echo "$test_data" | tee -a /tmp/encore.tmp
-
-                encore write /tmp/encore.tmp system test
-
-                old_val_lip="$(grep -c "leave_in_peace=1" /opt/encore/config)"
-
-                if [[ "$old_val_lip" -gt "0" ]]; then
-                    sed -i 's/leave_in_peace=1/leave_in_peace=0/g' /opt/encore/config
-                fi
-
-                old_val_verb="$(grep -c "leave_in_peace=1" /opt/encore/config)"
-
-                if [[ "$old_val_verb" -eq "0" ]]; then
-                    echo -e "The config file has been modified \n"
-                    # echo -e "The config file has been modified \n"
-                fi
-
-                encore destroy system test
-
-                sed -i 's/leave_in_peace=0/'"'$old_val_lip'"'/g' /opt/encore/config
-
-                echo -e "Damn it looks like you installed encore already thank you \n"
-                echo -e "Also from my small test it looks like your installation is fine \n"
-                echo -e "Phew. well then what can i do for you"
-
-                read -r -p "Update or Delete" options
-
-                # TODO add option to update the script
-                # TODO add option to update and keep existing keys and secrets
-                # TODO add uninstall option
-
-                echo -e "damn $options thats a great choice but uuhhhh actually theres isnt enough code for that \n"
-                echo -e "Sorry"
-                exit 0
-
-            fi
-
-            # check if the keys and jsons are valid
-            # read json for key path
-            # test if the file exists
-            # write a random file
-            # set leave_in_peace=0
-            # destroy file
-            # echo something like " you already have a working encore install would you like to "
-            # 1.) rotate keys
-            # 2.) redownload or update
-            # 3.) update while keeping the same keys and data
-            # 4.) update while rotating keys but keeping files EXPERIMENTAL
-            # 5.) see a magic trick make and delete a folder called system32
-
-            # rotating keys while keeping data
-            # decrypt all data to like a random tmp dir or ram drive ???
-            # re_generate all keys
-            # temporary set leave in peace to 0
-            # write like 10 test files
-            # destroy them
-            # unset leave in peace
-            # re write the privious file
-
-            #### WHAT ABOUT THE OLD DIRECTORIES???
+        if [[ "$old_val_lip" -gt "0" ]]; then
+            sed -i 's/leave_in_peace=1/leave_in_peace=0/g' /opt/encore/config
         else
-
             relazy
+        fi
 
-            # proceed to regular install
-            # jr and jp are the only dependencies for json editing
-            # I only use ubuntu and arch btw
+        old_val_verb="$(grep -c "leave_in_peace=1" /opt/encore/config)"
 
-            if [[ -f "/usr/bin/pacman" ]]; then
-                pacman -Sy jr jp vim
-            elif [[ -f "/usr/bin/apt" ]]; then
-                apt-get -y install jr jp
-            elif [[ -f "/usr/bin/yum" ]]; then
-                # ! NOT TESTED
-                yum install jr jp xxd vim-common -y
-            else
-                echo -e "small problem I dont know how to install dependencies for you"
-                echo -e "all you need is jq for json manipulation xxd and vim-commons"
-                exit 1
+        if [[ "$old_val_verb" -eq "0" ]]; then
+            echo -e "The config file has been modified \n"
+            # echo -e "The config file has been modified \n"
+        fi
+
+        encore destroy system te-st >> $logdir
+
+        if [[ "$old_val_lip" -gt "0" ]]; then
+            sed -i 's/leave_in_peace=1/leave_in_peace=0/g' /opt/encore/config
+        else
+            relazy
+        fi
+        echo "Your current install is valid we'll update and run this test again"
+
+        cd /tmp
+        if [[ -d ./encryption-core ]]; then 
+            rm -rfv ./encryption-core >> $logdir
+        else 
+            relazy
+        fi
+
+        git pull https://github.com/Dj-Codeman/encryption-core
+        cd encryption-core
+
+        cp -v ./install.sh /opt/encore/install.sh
+        cp -v ./scripts/debug.sh /opt/encore/debug.sh
+        cp -v ./scripts/encrypt /opt/encore/encrypt
+        cp -v ./scripts/functions.sh /opt/encore/functions.sh
+
+        #############
+        # SECOND TEST
+        # functionallity test
+        test_key_num="$(shuf -i $key_cur-$key_max -n 1)"
+    
+        # where the file originally came from
+        test_key="$jsondir/$test_key_num.json"
+        test_path="$(cat "$test_key" | jq ' .location' | sed 's/"//g')"
+
+        if [[ -f "$test_path" ]]; then
+            echo -e "Keys present checking validity \n"
+            echo -e "Creating some random data \n"
+            test_data="$(fetch_keys systemkey | base64)"
+
+            echo "$test_data" | tee -a /tmp/encore.tmp
+            encore write /tmp/encore.tmp system te-st >> $logdir
+            old_val_lip="$(grep -c "leave_in_peace=1" /opt/encore/config)"
+
+            if [[ "$old_val_lip" -gt "0" ]]; then
+                sed -i 's/leave_in_peace=1/leave_in_peace=0/g' /opt/encore/config
             fi
 
-            if [[ -f /tmp/encryption-core/scripts/encrypt ]]; then
+            old_val_verb="$(grep -c "leave_in_peace=1" /opt/encore/config)"
+
+            if [[ "$old_val_verb" -eq "0" ]]; then
+                echo -e "The config file has been modified \n"
+                # echo -e "The config file has been modified \n"
+            fi
+
+            encore destroy system te-st >> $logdir
+
+            # sed -i 's/leave_in_peace=0/'"'$old_val_lip'"'/g' /opt/encore/config
+
+            echo "The update was sucessful im just cleaning up a few things"
+            if [[ "$old_val_lip" -gt "0" ]]; then
+                sed -i 's/leave_in_peace=1/leave_in_peace=0/g' /opt/encore/config
+            else
                 relazy
-                echo -e "encrypt scripts found"
-            else
-                wget -i https://raw.githubusercontent.com/fastsitephp/fastsitephp/master/scripts/shell/bash/encrypt.sh >/tmp/encore/scripts/encrypt
             fi
+            sed -i 's/version='"'$old_ver'"'/version='"'$new_ver'"'/g' /opt/encore/scripts/encore
 
-            rm -rfv /opt/encore
 
-            mkdir /opt/encore
-
-            mv -v ./* /opt/encore/
-
-            # mv -v /opt/encore/test.sh ./test.sh
-
-            chmod +x /opt/encore/*
-            chmod +x /opt/encore/scripts/*
-
-            ln -s /opt/encore/scripts/encore /usr/local/bin/encore
-
-            ln -s /opt/encore/scripts/encrypt /usr/local/bin/encrypt
-
-            encore initialize
-
-            chown -Rfv $USER:$USER /opt/encore
-
-            if [[ -f /opt/encore/logs/log ]]; then
-                source /opt/encore/config
-                echo "HELLO ZA WORLDO" >>"$logdir"
-            else
-                echo "Encore successfully installed but logdir is misconfigured"
-            fi
-
-            clear
-
-            echo "encore installed / updated sucessfully"
-
+            #add section for restoring from the backups
+            #zip the backup 
+            echo "Congrats encore has been updated your new version is $new_ver"
             exit 0
-
         fi
 
     else
-        echo -e "I know whats wrong with it \n"
-        echo -e "It aint got no config int \n"
-
-        exit 1
+        echo -e "Your install is broken ? you have backups in /tmp/encore_bkp you should reinstall"
 
     fi
+}
 
-else
+function install() {
 
-    # proceed to regular install
-    # jr and jp are the only dependencies for json editing
-    # I only use ubuntu and arch btw
-    if [[ -f "/usr/bin/pacman" ]]; then
-        pacman -Sy jr jp vim
-    elif [[ -f "/usr/bin/apt" ]]; then
-        apt-get -y install jr jp
-    elif [[ -f "/usr/bin/yum" ]]; then
-        # ! NOT TESTED
-        yum install jr jp xxd vim-common -y
-    else
-        echo -e "small problem I dont know how to install dependencies for you"
-        echo -e "all you need is jq and jr for json manipulation xxd and vim-commons"
-        exit 1
+    if [ "$1" != "force" ]; then
+        if [[ -f "/usr/bin/pacman" ]]; then
+            pacman -Sy jq vim xxd
+        elif [[ -f "/usr/bin/apt" ]]; then
+            apt-get install jq vim xxd -y
+        elif [[ -f "/usr/bin/yum" ]]; then
+            yum install jr jp xxd vim-common -y
+        else
+            echo -e "Small problem. I dont know how to install the dependencies on your distro \n"
+            echo -e "All I need is jq and xxd and vim"
+            echo -e "I Don't recommend it but if you want to skip this call this script with force after it i.e install force"
+            exit 1
+        fi
     fi
 
-    if [[ -f /tmp/encryption-core/scripts/encrypt ]]; then
+    if [[ -f ./scripts/encrypt ]]; then
         relazy
         echo -e "encrypt scripts found"
     else
         wget -i https://raw.githubusercontent.com/fastsitephp/fastsitephp/master/scripts/shell/bash/encrypt.sh >/tmp/encore/scripts/encrypt
     fi
 
-    rm -rfv /opt/encore
-
-    mkdir /opt/encore
-
-    mv -v ./* /opt/encore/
-
-    # mv -v /opt/encore/test.sh ./test.sh
+    mkdir -pv /opt/encore/logs
+    cp -Rv ./* /opt/encore/
 
     chmod +x /opt/encore/*
     chmod +x /opt/encore/scripts/*
@@ -218,17 +167,94 @@ else
 
     chown -Rfv $USER:$USER /opt/encore
 
-    if [[ -f /opt/encore/logs/log ]]; then
-        source /opt/encore/config
-        echo "HELLO ZA WORLDO" >>"$logdir"
+    source /opt/encore/config
+    touch "$logdir"
+
+    if [[ -f "$logdir" ]]; then
+        echo -e "Hello ZA WORLDO \n" >>"$logdir"
     else
-        echo "Encore successfully installed but logdir is misconfigured"
+        echo "Error Creating log file. This optional-ish but aside from that encore has been installed"
+        exit 1
     fi
 
-    clear
-
-    echo "encore installed / updated sucessfully"
-
+    echo "encore installed sucessfully !"
     exit 0
+
+}
+
+function relazy() {
+    echo "hello out thereeeeee" >/dev/null
+}
+
+function backup() {
+    source /opt/encore/config
+
+
+    if [ "$1" == "data" ]; then
+        cur_dir=$datadir
+        tmp_dir="/tmp/encore_bkp/data"
+    elif [ "$1" == "indexs" ]; then
+        cur_dir=$jsondir
+        tmp_dir="/tmp/encore_bkp/indexs"
+    elif [ "$1" == "keys" ]; then
+        cur_dir=$keydir
+        tmp_dir="/tmp/encore_bkp/keys"
+        last=1
+    fi
+
+    if [ -d "$cur_dir" ]; then
+        relazy
+    else
+        echo -e "The folder $cur_dir is in a non normal directory, I can't handle that right now \n"
+        echo -e "You can change the cur_dir variable in this script if you need too"
+        exit 1
+    fi
+
+    #  created tmp folder
+    mkdir -pv "$tmp_dir"
+
+    # testing if the folder was created
+    if [ -d "$tmp_dir" ]; then
+        relazy
+    else
+        echo -e "Shit.. I couldn't create $tmp_dir it might be a permission issue. \n"
+        echo -e " Or I might be broke. If your confident its me send me an email at dwhitfield@ramfield.net"
+        exit 1
+    fi
+
+    cp -rfv "$cur_dir/" "$tmp_dir"
+}
+
+# check that this script is running as root
+person="$(whoami)"
+if [[ "$person" != "root" ]]; then
+    echo -e "YOU SHALL NOT PROCEED!! \n you need to be root !"
+    exit 1
+fi
+
+if [ -f "/usr/local/bin/encore" ]; then
+    # encore is already installed migrate keys and jsons
+
+    if [ -f "/opt/encore/config" ]; then
+        # make backup of the keys and the jsons
+
+        # backing up files
+        backup "indexs"
+        backup "keys"
+        backup "data"
+
+    else
+        echo -e "The config file isn't in the normal direcrory /opt/encore/config \n"
+        echo -e "This script will close to keep unintentional effects from occouring \n"
+        exit 1
+    fi
+
+
+    # after backups are done
+    update
+
+else
+
+    install "$1"
 
 fi
