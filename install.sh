@@ -119,12 +119,13 @@ function update() {
             else
                 relazy
             fi
-            sed -i "s/version=$old_ver/version=$new_ver/g" /opt/encore/scripts/functions.sh
+            sed -i "s/$old_ver/$new_ver/g" /opt/encore/scripts/functions.sh
 
 
             #add section for restoring from the backups
             #zip the backup 
-            echo "Congrats encore has been updated your new version is $new_ver"
+            rversion="$(encore version)"
+            echo "Congrats encore has been updated your new version is $rversion"
             exit 0
         fi
 
