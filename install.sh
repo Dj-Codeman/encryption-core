@@ -9,13 +9,16 @@
 # P is a patched version in development because I dont get how branches work on git yet
 
 major=1
-Nversion="P1.79"
+Nversion="P1.80"
 
 function update() {
     source /opt/encore/scripts/functions.sh
     old_ver=$version
     new_ver=$Nversion
     ## verson verification
+    key_max="$(($key_max -1))"
+    #stupid fix for a stupid mistake i dont want to fix ^
+
     # Check if there is a P ignore if update is ran with force
     if [ "$old_ver" != "$new_ver" ]; then
 
@@ -36,7 +39,7 @@ function update() {
 
         echo -e "Keys present checking validity \n"
         echo -e "Creating some random data \n"
-        test_data="$(fetch_keys systemkey | base64)"
+        test_data="$(fetch_keys $test_key_num | base64)"
 
         echo "$test_data" | tee -a /tmp/encore.tmp
         encore write /tmp/encore.tmp system te-st >> $logdir
@@ -90,7 +93,7 @@ function update() {
         if [[ -f "$test_path" ]]; then
             echo -e "Keys present checking validity \n"
             echo -e "Creating some random data \n"
-            test_data="$(fetch_keys systemkey | base64)"
+            test_data="$(fetch_keys $test_key_num | base64)"
 
             echo "$test_data" | tee -a /tmp/encore.tmp
             encore write /tmp/encore.tmp system te-st >> $logdir
