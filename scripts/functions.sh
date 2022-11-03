@@ -96,14 +96,14 @@ function fwrite {
     fi
 
     if [ -f "$input" ]; then
-        echo "File was moved successfully"
+        echo "File was moved successfully" >> $logdir
 
         name="$(echo "$shortname-$class" | base64)"
         output="$datadir/$name"
         encrypt -e -i "$input" -o "$output" -k "$(cat "$(fetch_keys $key)")" >> $logdir
 
         if [ -f "$output" ]; then
-            echo -e "\nFile Successfully encrypted"
+            echo -e "\nFile Successfully encrypted" >> $logdir
             # removing plaintext file
             rm $input >> /dev/null
             # shortname_test
@@ -119,7 +119,7 @@ function fwrite {
             echo "[\"$version\",\"$shortname\",\"$class\",\"$key\",\"$uid\",\"$datapath\",\"$output\"]" | jq -r '{ "version":.[0], "name":.[1], "class":.[2], "key":.[3], "uid":.[4], "path":.[5], "dir":.[6] }' >"$jsonbase.jn"
             encrypt -e -i "$jsonbase.jn" -o "$jsonbase.json" -k "$(cat "$(fetch_keys "systemkey")")" >> $logdir
             if [ -f "$jsonbase.json" ]; then
-                echo "index created succefully"
+                echo "index created succefully" >> $logdir
 
                 rm -v "$jsonbase.jn" >> $logdir
                 unset $uid

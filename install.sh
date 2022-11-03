@@ -9,7 +9,7 @@
 # P is a patched version in development because I dont get how branches work on git yet
 
 major=1
-Nversion="P1.82"
+Nversion="P1.83"
 
 function update() {
     source /opt/encore/scripts/functions.sh
