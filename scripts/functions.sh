@@ -1,5 +1,5 @@
 #!/bin/bash
-version="V1.75"
+version="Vx.xx"
 
 # reading config file config
 source /opt/encore/config
@@ -116,7 +116,7 @@ function fwrite {
             key=${key//$'\n'/} # if the variable isn't filtered multiple keys are copyed to the json file
             uid=${uid//$'\n'/}
             output=${output//$'\n'/}
-            echo "[\"$shortname\",\"$class\",\"$key\",\"$uid\",\"$datapath\",\"$output\"]" | jq -r '{ "name":.[0], "class":.[1], "key":.[2], "uid":.[3], "path":.[4], "dir":.[5] }' >"$jsonbase.jn"
+            echo "[\"$version\",\"$shortname\",\"$class\",\"$key\",\"$uid\",\"$datapath\",\"$output\"]" | jq -r '{ "version":.[0], "name":.[1], "class":.[2], "key":.[3], "uid":.[4], "path":.[5], "dir":.[6] }' >"$jsonbase.jn"
             encrypt -e -i "$jsonbase.jn" -o "$jsonbase.json" -k "$(cat "$(fetch_keys "systemkey")")"
             if [ -f "$jsonbase.json" ]; then
                 echo "index created succefully"
@@ -171,6 +171,7 @@ function fread {
         encrypt -d -i "$index_long" -o "$index_short" -k "$(cat "$(fetch_keys "systemkey")")"
 
         # getting variables from the json
+        wversion="$(cat "$index_short" | jq ' .version' | sed 's/"//g')"
 
         # current path to encrypted file
         path="$(cat "$index_short" | jq ' .dir' | sed 's/"//g')"
@@ -186,6 +187,11 @@ function fread {
 
         if [[ $re_place == "0" ]]; then
             olddir="$datadir/$shortname-$class"
+        fi
+
+        if [[ "$version" != "$wversion" ]]; then
+            echo -e "The version of encore that wrote this file is not the same one that is reading this file"
+            echo -e "\nThis might cause errors I recommend unencrypting and destroying this copy and the re-encrypting it"
         fi
 
         # dont want to leave un encrypted json files out
