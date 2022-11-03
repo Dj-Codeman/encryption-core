@@ -19,12 +19,12 @@ function generate_keys {
     encrypt -g >"$systemkey"
 
     # creating json file
-    echo "[\"0\",\"$systemkey\",\"NULL\" ]" | jq -r '{ "number":.[0], "location":.[1], "parent":.[2] }' >"$jsondir/master.json"
+    echo "[\"$version\",\"0\",\"$systemkey\",\"NULL\" ]" | jq -r '{ "version":.[0], "number":.[1], "location":.[2], "parent":.[3] }' >"$jsondir/master.json"
 
     #generating random keys
     for i in $(seq $key_max); do
         encrypt -g >"$keydir/$key_cur.dk"
-        echo "[\"$key_cur\",\"$keydir/$key_cur.dk\",\"systemkey.dk\" ]" | jq -r '{ "number":.[0], "location":.[1], "parent":.[2] }' >"$jsondir/$key_cur.json"
+        echo "[\"$version\",\"$key_cur\",\"$keydir/$key_cur.dk\",\"systemkey.dk\" ]" | jq -r '{ "version":.[0], "number":.[1], "location":.[2], "parent":.[3] }' >"$jsondir/$key_cur.json"
         # incrementing key_cur
         key_cur=$((key_cur + 1))
     done
@@ -48,13 +48,13 @@ function fetch_keys {
 function check_keys {
     #verifying keys are in place and valid
     if [ -f "$(fetch_keys "systemkey")" ]; then
-        echo "Systemkey exists" >>../logs/encore.log
+        echo "Systemkey exists" >>$logdir
         # add a section to veryfy key integrity
         # maybe md5 checksum ???
         # key test
         # if failed generate_keys
     else
-        echo "Keys missing" >>../logs/encore.log
+        echo "Keys missing" >>$logdir
         generate_keys
         # refactor for individual json files instead of master index
         echo "Keys were rotated please run again"
@@ -90,9 +90,9 @@ function fwrite {
 
     # checking for soft move
     if [ "$soft_move" == "0" ]; then
-        mv -v "$(realpath "$datapath")" "$input" >> /var/log/crypt
+        mv -v "$(realpath "$datapath")" "$input" >> $logdir
     else
-        cp -v "$(realpath "$datapath")" "$input" >> /var/log/crypt
+        cp -v "$(realpath "$datapath")" "$input" >> $logdir
     fi
 
     if [ -f "$input" ]; then
@@ -100,7 +100,7 @@ function fwrite {
 
         name="$(echo "$shortname-$class" | base64)"
         output="$datadir/$name"
-        encrypt -e -i "$input" -o "$output" -k "$(cat "$(fetch_keys $key)")"
+        encrypt -e -i "$input" -o "$output" -k "$(cat "$(fetch_keys $key)")" >> $logdir
 
         if [ -f "$output" ]; then
             echo -e "\nFile Successfully encrypted"
@@ -117,7 +117,7 @@ function fwrite {
             uid=${uid//$'\n'/}
             output=${output//$'\n'/}
             echo "[\"$version\",\"$shortname\",\"$class\",\"$key\",\"$uid\",\"$datapath\",\"$output\"]" | jq -r '{ "version":.[0], "name":.[1], "class":.[2], "key":.[3], "uid":.[4], "path":.[5], "dir":.[6] }' >"$jsonbase.jn"
-            encrypt -e -i "$jsonbase.jn" -o "$jsonbase.json" -k "$(cat "$(fetch_keys "systemkey")")"
+            encrypt -e -i "$jsonbase.jn" -o "$jsonbase.json" -k "$(cat "$(fetch_keys "systemkey")")" >> $logdir
             if [ -f "$jsonbase.json" ]; then
                 echo "index created succefully"
 
@@ -168,7 +168,7 @@ function fread {
 
         index_short="$base.jn"
 
-        encrypt -d -i "$index_long" -o "$index_short" -k "$(cat "$(fetch_keys "systemkey")")"
+        encrypt -d -i "$index_long" -o "$index_short" -k "$(cat "$(fetch_keys "systemkey")")" >> $logdir
 
         # getting variables from the json
         wversion="$(cat "$index_short" | jq ' .version' | sed 's/"//g')"
@@ -197,7 +197,7 @@ function fread {
         # dont want to leave un encrypted json files out
         rm "$index_short" > /dev/null
 
-        encrypt -d -i "$path" -o "$olddir" -k "$(cat "$(fetch_keys "$key")")"
+        encrypt -d -i "$path" -o "$olddir" -k "$(cat "$(fetch_keys "$key")")" >> $logdir
 
     else
 
@@ -220,7 +220,7 @@ function destroy {
     index_long="$jsondir/$shortname-$class.json"
     index_short="$jsondir/$shortname-$class.jn"
 
-    encrypt -d -i "$index_long" -o "$index_short" -k "$(cat "$(fetch_keys "systemkey")")"
+    encrypt -d -i "$index_long" -o "$index_short" -k "$(cat "$(fetch_keys "systemkey")")" >> $logdir
 
     # current path to encrypted file
     path="$(cat "$index_short" | jq ' .dir' | sed 's/"//g')"
@@ -245,6 +245,8 @@ function destroy {
 }
 
 function initialize {
+
+    echo "Log start" > $logdir
 
     encrypt -t
 
