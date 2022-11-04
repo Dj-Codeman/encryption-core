@@ -32,6 +32,7 @@ function update() {
     keyword="$2"
 
     if [[ "$old_ver" != "$new_ver" && "$keyword" != "force" ]]; then 
+    
         if [[ "$Nversion" == *"$need2"* ]]; then
             #This is a patched version for development
             echo -e "These version are compatible but need to be initialized"
@@ -47,15 +48,18 @@ function update() {
         fi
 
     elif [[ "$old_ver" != "$new_ver" && "$keyword" == "force" ]]
+    
         echo -e "YOUR RUNNING THE UPDATE WITH FORCE THIS WILL DELETE ALL KEYS MAPS AND DATA"
         echo -e "TO CONTINUE TYPE: DO AS I SAY AND DELETE EVERYTHING"
         read dais
+        
         if [[ "$dais" == "DO AS I SAY AND DELETE EVERYTHING" ]]; then 
             major=1
         else
             echo "Your misspelled the key word or had a change of heart ?"
-            exit1
+            exit 1
         fi
+    
     else
         echo -e "Versions are the same ? Sorry I fucked up somewhere..."
         exit 2
