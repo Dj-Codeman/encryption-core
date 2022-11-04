@@ -7,7 +7,7 @@
 
 # V is version number
 # P is a patched version in development because I dont get how branches work on git yet
-#currents V1.75 P2.02
+#currents V2.00 P2.03
 
 
 # Whole number updates aren't compatible with each other and require re-initialization
@@ -240,8 +240,9 @@ function install() {
     chown -Rfv $USER:$USER /var/log/encore
     chown -Rfv $USER:$USER /etc/encore
 
-    chmod -rv 600 /etc/systemkey.dk >> $logdir
-    chmod -rv 600 /var/encore >> $logdir
+    chmod -rv 400 /etc/systemkey.dk >> $logdir
+    chmod -rv 500 /var/encore >> $logdir
+    chmod -rv 400 /opt/encore/config
 
     touch "$logdir"
 
