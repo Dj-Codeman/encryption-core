@@ -163,7 +163,7 @@ function fread {
 
 
     index_long="$encjson/$shortname-$class.json"
-    index_short="$plnjson/$shortname-$class.jn"
+    index_short="$encjson/$shortname-$class.jn"
 
     #test if json exists
     if [ -f "$index_long" ]; then
