@@ -7,7 +7,7 @@
 
 # V is version number
 # P is a patched version in development because I dont get how branches work on git yet
-#currents V2.01 P2.04
+#currents V2.05 P2.05
 
 
 # Whole number updates aren't compatible with each other and require re-initialization
@@ -16,12 +16,11 @@
 #  V1.25 !-> V2.00 P1.50 -> VX.xx Patched versions can update for debugging but will require 
 # re initilazaation
 
-installer_version="V2.05"
+installer_version="P2.05"
 
 function update() {
     source /opt/encore/scripts/functions.sh
-    wget -O /tmp/update.tmp https://raw.githubusercontent.com/Dj-Codeman/encryption-core/master/install.sh
-    bash /tmp/update.tmp
+    
 
     old_ver=$version
     new_ver=$installer_version

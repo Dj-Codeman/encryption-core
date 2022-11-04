@@ -100,6 +100,9 @@ elif [[ "$1" == "debug" ]]; then
 
 elif [[ "$1" == "update" ]]; then
 
+    wget -O /opt/encore/install.sh \
+    https://raw.githubusercontent.com/Dj-Codeman/encryption-core/master/install.sh
+
     bash /opt/encore/install.sh "$2"
 
 elif [[ "$1" == "version" ]]; then
