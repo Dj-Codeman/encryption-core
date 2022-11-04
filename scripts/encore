@@ -110,7 +110,7 @@ elif [[ "$1" == "version" ]]; then
 else
 
     show_help
-    echo "$version"
+    echo "Current version: $version"
     exit 0
 
 fi

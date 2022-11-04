@@ -16,7 +16,7 @@
 #  V1.25 !-> V2.00 P1.50 -> VX.xx Patched versions can update for debugging but will require 
 # re initilazaation
 
-installer_version="P2.11"
+installer_version="P2.12"
 
 function update() {
     source /opt/encore/scripts/functions.sh
@@ -35,12 +35,12 @@ function update() {
 
     if [[ "$old_ver" != "$new_ver" && "$keyword" != "force" ]]; then 
     
-        if [[ "$Nversion" == *"$need2"* ]]; then
+        if [[ "$new_ver" == *"$need2"* ]]; then
             #This is a patched version for development
             echo -e "These version are compatible but may need to be initialized"
             echo -e "These version are compatible but may need to be initialized" >> $logdir
             major=0
-        elif [[ "$Nversion" == *"$need1"* ]]; then
+        elif [[ "$new_ver" == *"$need1"* ]]; then
             echo -e "Copatibility check passed"
             major=0
         else
