@@ -71,7 +71,7 @@ function update() {
     test_key_num="$(shuf -i $key_cur-$key_max -n 1)"
     
     # where the file originally came from
-    test_key="$jsondir/$test_key_num.json"
+    test_key="$plnjson/$test_key_num.json"
 
     # test_path="$(cat "$test_key" | jq ' .location' | sed 's/"//g')"
     test_path="$(cat "$test_key" | jq ' .location' | sed 's/"//g' )"
@@ -133,7 +133,7 @@ function update() {
         test_key_num="$(shuf -i $key_cur-$key_max -n 1)"
     
         # where the file originally came from
-        test_key="$jsondir/$test_key_num.json"
+        test_key="$plnjson/$test_key_num.json"
         test_path="$(cat "$test_key" | jq ' .location' | sed 's/"//g')"
 
         if [[ -f "$test_path" ]]; then
@@ -269,8 +269,11 @@ function backup() {
         cur_dir=$datadir
         tmp_dir="/tmp/encore_bkp/data"
     elif [ "$1" == "indexs" ]; then
-        cur_dir=$jsondir
+        cur_dir=$plnjson
         tmp_dir="/tmp/encore_bkp/indexs"
+    elif [ "$1" == "maps" ]; then 
+        cur_dir=$encjson
+        tmp_dir="/tmp/encore_bkp/maps"
     elif [ "$1" == "keys" ]; then
         cur_dir=$keydir
         tmp_dir="/tmp/encore_bkp/keys"
@@ -316,6 +319,7 @@ if [ -f "/usr/local/bin/encore" ]; then
         # backing up files
         backup "indexs"
         backup "keys"
+        backup "maps"
         backup "data"
 
     else
