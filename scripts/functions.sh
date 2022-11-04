@@ -219,7 +219,7 @@ function destroy {
     fi
 
     index_long="$encjson/$shortname-$class.json"
-    index_short="$plnjson/$shortname-$class.jn"
+    index_short="$encjson/$shortname-$class.jn"
 
     encrypt -d -i "$index_long" -o "$index_short" -k "$(cat "$(fetch_keys "systemkey")")" >> $logdir
 
