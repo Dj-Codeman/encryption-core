@@ -16,7 +16,7 @@
 #  V1.25 !-> V2.00 P1.50 -> VX.xx Patched versions can update for debugging but will require 
 # re initilazaation
 
-Nversion="P2.04"
+Nversion="V2.00"
 
 function update() {
     source /opt/encore/scripts/functions.sh
@@ -235,14 +235,14 @@ function install() {
 
     encore initialize
 
-    chown -Rfv $USER:$USER /opt/encore/*
-    chown -Rfv $USER:$USER /var/encore/*
-    chown -Rfv $USER:$USER /var/log/encore
-    chown -Rfv $USER:$USER /etc/encore
+    chown -Rfv $USER:$USER /opt/encore/* >> $logdir
+    chown -Rfv $USER:$USER /var/encore/* >> $logdir
+    chown -Rfv $USER:$USER /var/log/encore >> $logdir
+    chown -Rfv $USER:$USER /etc/encore >> $logdir
 
-    chmod -rv 400 /etc/systemkey.dk >> $logdir
-    chmod -rv 500 /var/encore >> $logdir
-    chmod -rv 400 /opt/encore/config
+    chmod -Rv 400 /etc/systemkey.dk >> $logdir
+    chmod -Rv 500 /var/encore >> $logdir
+    chmod -Rv 400 /opt/encore/config >> $logdir
 
     touch "$logdir"
 
