@@ -20,8 +20,7 @@ installer_version="V2.04"
 
 function update() {
     source /opt/encore/scripts/functions.sh
-    wget -O /tmp/update.tmp \ 
-    https://raw.githubusercontent.com/Dj-Codeman/encryption-core/master/install.sh 
+    wget -O /tmp/update.tmp https://raw.githubusercontent.com/Dj-Codeman/encryption-core/master/version.sh 
     source /tmp/update.tmp
 
     old_ver=$version
