@@ -16,14 +16,13 @@
 #  V1.25 !-> V2.00 P1.50 -> VX.xx Patched versions can update for debugging but will require 
 # re initilazaation
 
-installer_version="P2.13"
+installer_version="P2.14"
 
 function update() {
     source /opt/encore/scripts/functions.sh
     
 
     old_ver=$version
-    new_ver=$installer_version
     ## verson verification
     key_max="$(($key_max -1))"
     #stupid fix for a stupid mistake i dont want to fix ^
@@ -33,14 +32,14 @@ function update() {
     need2="P"
     keyword="$1"
 
-    if [[ "$old_ver" != "$new_ver" && "$keyword" != "force" ]]; then 
+    if [[ "$old_ver" != "$installer_version" && "$keyword" != "force" ]]; then 
     
-        if [[ "$new_ver" == *"$need2"* ]]; then
+        if [[ "$installer_version" == *"$need2"* ]]; then
             #This is a patched version for development
             echo -e "These version are compatible but may need to be initialized"
             echo -e "These version are compatible but may need to be initialized" >> $logdir
             major=0
-        elif [[ "$new_ver" == *"$need1"* ]]; then
+        elif [[ "$installer_version" == *"$need1"* ]]; then
             echo -e "Copatibility check passed"
             major=0
         else
@@ -49,7 +48,7 @@ function update() {
             exit 1
         fi
 
-    elif [[ "$old_ver" != "$new_ver" && "$keyword" == "force" ]]; then
+    elif [[ "$old_ver" != "$installer_version" && "$keyword" == "force" ]]; then
     
         echo -e "YOUR RUNNING THE UPDATE WITH FORCE THIS WILL DELETE ALL KEYS MAPS AND DATA"
         echo -e "TO CONTINUE TYPE: DO AS I SAY AND DELETE EVERYTHING"
@@ -117,7 +116,7 @@ function update() {
 
         git -C /tmp clone https://github.com/Dj-Codeman/encryption-core
 
-        sed -i "s/Vx.xx/$new_ver/g" /tmp/encryption-core/scripts/functions.sh
+        sed -i "s/Vx.xx/$installer_version/g" /tmp/encryption-core/scripts/functions.sh
 
         cp -v /tmp/encryption-core/install.sh /opt/encore/install.sh
         cp -v /tmp/encryption-core/scripts/debug.sh /opt/encore/scripts/debug.sh
@@ -175,7 +174,7 @@ function update() {
             
             rversion="$(encore version)"
 
-            if [[ "$rversion" != "$new_ver" ]]; then
+            if [[ "$rversion" != "$installer_version" ]]; then
                 sed -i "s/$rversion/$new_ver/g" /opt/encore/scripts/functions.sh
             else
                 relazy
