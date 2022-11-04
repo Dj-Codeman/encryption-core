@@ -7,7 +7,7 @@
 
 # V is version number
 # P is a patched version in development because I dont get how branches work on git yet
-#currents V1.75 P2.00
+#currents V1.75 P2.02
 
 
 # Whole number updates aren't compatible with each other and require re-initialization
@@ -16,7 +16,7 @@
 #  V1.25 !-> V2.00 P1.50 -> VX.xx Patched versions can update for debugging but will require 
 # re initilazaation
 
-Nversion="P2.01"
+Nversion="P2.02"
 
 function update() {
     source /opt/encore/scripts/functions.sh
@@ -230,6 +230,7 @@ function install() {
     ln -s /opt/encore/scripts/encore /usr/local/bin/encore
     ln -s /opt/encore/config /etc/encore/config
     ln -s /opt/encore/scripts/encrypt /usr/local/bin/encrypt
+    source /opt/encore/config
 
 
     encore initialize
@@ -242,7 +243,6 @@ function install() {
     chmod -rv 600 /etc/systemkey.dk >> $logdir
     chmod -rv 600 /var/encore >> $logdir
 
-    source /opt/encore/config
     touch "$logdir"
 
     if [[ -f "$logdir" ]]; then
