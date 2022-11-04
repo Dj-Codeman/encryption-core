@@ -100,7 +100,7 @@ elif [[ "$1" == "debug" ]]; then
 
 elif [[ "$1" == "update" ]]; then
 
-    bash /opt/encore/install.sh
+    bash /opt/encore/install.sh "$2"
 
 elif [[ "$1" == "version" ]]; then
     echo "$version"
