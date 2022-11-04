@@ -29,14 +29,14 @@ function update() {
     ### VERSION INFO
     need1="2."
     need2="P"
-    keyword="$2"
+    keyword="$1"
 
     if [[ "$old_ver" != "$new_ver" && "$keyword" != "force" ]]; then 
     
         if [[ "$Nversion" == *"$need2"* ]]; then
             #This is a patched version for development
-            echo -e "These version are compatible but need to be initialized"
-            echo -e "These version are compatible but need to be initialized" >> $logdir
+            echo -e "These version are compatible but may need to be initialized"
+            echo -e "These version are compatible but may need to be initialized" >> $logdir
             major=0
         elif [[ "$Nversion" == *"$need1"* ]]; then
             echo -e "Copatibility check passed"
