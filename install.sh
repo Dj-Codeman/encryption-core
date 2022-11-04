@@ -7,9 +7,16 @@
 
 # V is version number
 # P is a patched version in development because I dont get how branches work on git yet
+#currents V1.75 P2.00
 
-major=1
-Nversion="P1.84"
+
+# Whole number updates aren't compatible with each other and require re-initialization
+# ie V1.74 Cant update to V2.25 all data will need to be decrypted before the update
+# PVersion will update with a keyword "force" in the update call ie encore update force
+#  V1.25 !-> V2.00 P1.50 -> VX.xx Patched versions can update for debugging but will require 
+# re initilazaation
+
+Nversion="P2.00"
 
 function update() {
     source /opt/encore/scripts/functions.sh
@@ -19,12 +26,41 @@ function update() {
     key_max="$(($key_max -1))"
     #stupid fix for a stupid mistake i dont want to fix ^
 
-    # Check if there is a P ignore if update is ran with force
-    if [ "$old_ver" != "$new_ver" ]; then
+    ### VERSION INFO
+    need1="2."
+    need2="P"
+    keyword="$2"
 
-        echo "Version compatability check not implemented"
+    if [[ "$old_ver" != "$new_ver" && "$keyword" != "force" ]]; then 
+        if [[ "$Nversion" == *"$need2"* ]]; then
+            #This is a patched version for development
+            echo -e "These version are compatible but need to be initialized"
+            echo -e "These version are compatible but need to be initialized" >> $logdir
+            major=0
+        elif [[ "$Nversion" == *"$need1"* ]]; then
+            echo -e "Copatibility check passed"
+            major=0
+        else
+            echo -e "These versions are not garunteed to be compatible with eachother"
+            echo -e "To continue decrypt all file and run \" encore update force\""
+            exit 1
+        fi
 
+    elif [[ "$old_ver" != "$new_ver" && "$keyword" == "force" ]]
+        echo -e "YOUR RUNNING THE UPDATE WITH FORCE THIS WILL DELETE ALL KEYS MAPS AND DATA"
+        echo -e "TO CONTINUE TYPE: DO AS I SAY AND DELETE EVERYTHING"
+        read dais
+        if [[ "$dais" == "DO AS I SAY AND DELETE EVERYTHING" ]]; then 
+            major=1
+        else
+            echo "Your misspelled the key word or had a change of heart ?"
+            exit1
+        fi
+    else
+        echo -e "Versions are the same ? Sorry I fucked up somewhere..."
+        exit 2
     fi
+
     # verifying the install works correctly
 
     # functionallity test
@@ -82,6 +118,10 @@ function update() {
         cp -v /tmp/encryption-core/scripts/encore /opt/encore/scripts/encore
         cp -v /tmp/encryption-core/scripts/encrypt /opt/encore/scripts/encrypt
         cp -v /tmp/encryption-core/scripts/functions.sh /opt/encore/scripts/functions.sh
+        if [[ "$major" == "1" ]]; then
+            cp -v /tmp/encryption-core/config /opt/encore/config
+            encore initialize
+        fi
 
         #############
         # SECOND TEST
@@ -137,6 +177,9 @@ function update() {
             
             rversion="$(encore version)"
             echo "Congrats encore has been updated your new version is $rversion"
+            if [[ "$major" == "1" ]]; then 
+                echo -e "Just in case something went wrong you have backups of all your data in /tmp/encore"
+            fi
             exit 0
         fi
 
@@ -171,18 +214,29 @@ function install() {
     fi
 
     mkdir -pv /opt/encore/logs
+    mkdir -pv /etc/encore
+    mkdir -pv /var/encore
+    mkdir -pv /var/log/encore
+
     cp -Rv ./* /opt/encore/
 
     chmod +x /opt/encore/*
     chmod +x /opt/encore/scripts/*
 
     ln -s /opt/encore/scripts/encore /usr/local/bin/encore
-
+    ln -s /opt/encore/config /etc/encore/config
     ln -s /opt/encore/scripts/encrypt /usr/local/bin/encrypt
+
 
     encore initialize
 
     chown -Rfv $USER:$USER /opt/encore
+    chown -Rfv $USER:$USER /var/encore
+    chown -Rfv $USER:$USER /var/log/encore
+    chown -Rfv $USER:$USER /etc/encore
+
+    chmod -rv 600 /etc/systemkey.dk >> $logdir
+    chmod -rv 600 /var/encore >> $logdir
 
     source /opt/encore/config
     touch "$logdir"

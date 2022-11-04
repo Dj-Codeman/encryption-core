@@ -3,39 +3,46 @@
 #LOCATIONS
 # Data this is where the finished and encrypted files live
 # When keys are regenerated this folder will be emptyied 
-# default /opt/encore/data
+# default /var/encore/data
 
-datadir="/opt/encore/data"
+datadir="/var/encore/data"
 
-# JSON This is where plan text key indexs will live
+# JSON This is where plan text maps will live
 # these are generated along side the keys
-# default /opt/encore/indexs
+# default /var/encore/indexs
 
-jsondir="/opt/encore/indexs"
+plnjson="/var/encore/indexs"
+
+# This is where the encrypted jsons for written file 
+# will live. The json debug tool should be used to decrypt 
+# and modify these files
+
+encjson="/var/encore/maps"
 
 # KEY These are the random encryption keys 
 # 128 bit strings for use with the encrypt script
 # https://www.fastsitephp.com/fr/documents/file-encryption-bash
 # default /opt/encore/keys
 
-keydir="/opt/encore/keys"
+keydir="/var/encore/keys"
 
 # SYSTEM KEY JSON file that contain location and key information 
 # are encrypted using this key
 # if this key is missing on script call all file in:
-# $datadir
+# $datadir will be illegible 
+# IF THIS KEY IS DELETED ALL DATA IS CONSIDERED LOST
 # default /opt/encore/keys/systemkey.dk
 
-systemkey="/opt/encore/keys/systemkey.dk"
+systemkey="/etc/systemkey.dk"
 
 #log dir
 
-logdir="/opt/encore/logs/log"
+logdir="/var/log/encore/general"
 
 # key_max the limit of keys to generate
 # default=100
 
-key_max=30
+key_max=100
 
 # Works like a key min value
 # by key_cur and key_max the range from which keys are picked
@@ -55,11 +62,11 @@ soft_move=0
 # directory
 # default=1
 
-re_place=0
+re_place=1
 
 # save on destroy
 # if you want the destroy function to recover the file before deleting
 # the encrypted copy set this to 1
-# default=0
+# default=1
 
 leave_in_peace=1

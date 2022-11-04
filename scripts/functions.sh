@@ -9,22 +9,23 @@ source /opt/encore/config
 function generate_keys {
     echo "Cleaning old keys and generating new ones"
     rm -rfv "$keydir/"
-    rm -rfv "$jsondir/"
+    rm -rfv "$plnjson/"
+    rm -rfv "$encjson/"
     rm -rfv "$datadir/"
     mkdir -pv "$keydir/"
-    mkdir -pv "$jsondir/"
+    mkdir -pv "$plnjson/"
     mkdir -pv "$datadir"
 
     #creating new system key
     encrypt -g >"$systemkey"
 
     # creating json file
-    echo "[\"$version\",\"0\",\"$systemkey\",\"NULL\" ]" | jq -r '{ "version":.[0], "number":.[1], "location":.[2], "parent":.[3] }' >"$jsondir/master.json"
+    echo "[\"$version\",\"0\",\"$systemkey\",\"NULL\" ]" | jq -r '{ "version":.[0], "number":.[1], "location":.[2], "parent":.[3] }' >"$plnjson/master.json"
 
     #generating random keys
     for i in $(seq $key_max); do
         encrypt -g >"$keydir/$key_cur.dk"
-        echo "[\"$version\",\"$key_cur\",\"$keydir/$key_cur.dk\",\"systemkey.dk\" ]" | jq -r '{ "version":.[0], "number":.[1], "location":.[2], "parent":.[3] }' >"$jsondir/$key_cur.json"
+        echo "[\"$version\",\"$key_cur\",\"$keydir/$key_cur.dk\",\"systemkey.dk\" ]" | jq -r '{ "version":.[0], "number":.[1], "location":.[2], "parent":.[3] }' >"$plnjson/$key_cur.json"
         # incrementing key_cur
         key_cur=$((key_cur + 1))
     done
@@ -37,10 +38,10 @@ function fetch_keys {
     number="$1"
 
     if [ "$number" == "systemkey" ]; then
-        key="$(cat "$jsondir/master.json" | jq '.location' | sed 's/"//g')"
+        key="$(cat "$plnjson/master.json" | jq '.location' | sed 's/"//g')"
         echo "$key"
     else
-        key="$(cat "$jsondir/$number.json" | jq '.location' | sed 's/"//g')"
+        key="$(cat "$plnjson/$number.json" | jq '.location' | sed 's/"//g')"
         echo "$key"
     fi
 }
@@ -108,7 +109,7 @@ function fwrite {
             rm $input >> /dev/null
             # shortname_test
             #json base file variable
-            jsonbase="$jsondir/$shortname-$class"
+            encjson="$encjson/$shortname-$class"
 
             ## If shortname already exists call a flush ... whatever that will be
             shortname=${shortname//$'\n'/}
@@ -116,18 +117,18 @@ function fwrite {
             key=${key//$'\n'/} # if the variable isn't filtered multiple keys are copyed to the json file
             uid=${uid//$'\n'/}
             output=${output//$'\n'/}
-            echo "[\"$version\",\"$shortname\",\"$class\",\"$key\",\"$uid\",\"$datapath\",\"$output\"]" | jq -r '{ "version":.[0], "name":.[1], "class":.[2], "key":.[3], "uid":.[4], "path":.[5], "dir":.[6] }' >"$jsonbase.jn"
-            encrypt -e -i "$jsonbase.jn" -o "$jsonbase.json" -k "$(cat "$(fetch_keys "systemkey")")" >> $logdir
-            if [ -f "$jsonbase.json" ]; then
+            echo "[\"$version\",\"$shortname\",\"$class\",\"$key\",\"$uid\",\"$datapath\",\"$output\"]" | jq -r '{ "version":.[0], "name":.[1], "class":.[2], "key":.[3], "uid":.[4], "path":.[5], "dir":.[6] }' >"$encjson.jn"
+            encrypt -e -i "$encjson.jn" -o "$encjson.json" -k "$(cat "$(fetch_keys "systemkey")")" >> $logdir
+            if [ -f "$encjson.json" ]; then
                 echo "index created succefully" >> $logdir
 
-                rm -v "$jsonbase.jn" >> $logdir
+                rm -v "$encjson.jn" >> $logdir
                 unset $uid
 
                 # /opt/encore/function.sh: line 129: unset: 'key number' not a valid identifier ?
                 # on ubuntu 16.04 lts
                 unset $key
-                echo -e "\nDone"
+                echo -e "DONE"
                 exit 0
             else
                 clear
@@ -160,13 +161,12 @@ function fread {
     class="$1"
     shortname="$2"
 
-    base="$jsondir/$shortname-$class"
-    index_long="$base.json"
+
+    index_long="$encjson/$shortname-$class.json"
+    index_short="$plnjson/$shortname-$class.jn"
 
     #test if json exists
     if [ -f "$index_long" ]; then
-
-        index_short="$base.jn"
 
         encrypt -d -i "$index_long" -o "$index_short" -k "$(cat "$(fetch_keys "systemkey")")" >> $logdir
 
@@ -218,8 +218,8 @@ function destroy {
         fread "$class" "$shortname"
     fi
 
-    index_long="$jsondir/$shortname-$class.json"
-    index_short="$jsondir/$shortname-$class.jn"
+    index_long="$encjson/$shortname-$class.json"
+    index_short="$plnjson/$shortname-$class.jn"
 
     encrypt -d -i "$index_long" -o "$index_short" -k "$(cat "$(fetch_keys "systemkey")")" >> $logdir
 
