@@ -47,12 +47,12 @@ function update() {
             exit 1
         fi
 
-    elif [[ "$old_ver" != "$new_ver" && "$keyword" == "force" ]]
+    elif [[ "$old_ver" != "$new_ver" && "$keyword" == "force" ]]; then
     
         echo -e "YOUR RUNNING THE UPDATE WITH FORCE THIS WILL DELETE ALL KEYS MAPS AND DATA"
         echo -e "TO CONTINUE TYPE: DO AS I SAY AND DELETE EVERYTHING"
         read dais
-        
+
         if [[ "$dais" == "DO AS I SAY AND DELETE EVERYTHING" ]]; then 
             major=1
         else
