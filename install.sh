@@ -7,7 +7,7 @@
 
 # V is version number
 # P is a patched version in development because I dont get how branches work on git yet
-#currents V2.00 P2.03
+#currents V2.00 P2.04
 
 
 # Whole number updates aren't compatible with each other and require re-initialization
@@ -16,7 +16,7 @@
 #  V1.25 !-> V2.00 P1.50 -> VX.xx Patched versions can update for debugging but will require 
 # re initilazaation
 
-Nversion="P2.03"
+Nversion="P2.04"
 
 function update() {
     source /opt/encore/scripts/functions.sh
