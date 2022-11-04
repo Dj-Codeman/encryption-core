@@ -16,7 +16,7 @@
 #  V1.25 !-> V2.00 P1.50 -> VX.xx Patched versions can update for debugging but will require 
 # re initilazaation
 
-installer_version="P2.10"
+installer_version="P2.11"
 
 function update() {
     source /opt/encore/scripts/functions.sh
