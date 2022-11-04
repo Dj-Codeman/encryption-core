@@ -8,7 +8,7 @@ function debug_json {
     class=$1
     shortname=$2
 
-    base="$jsondir/$shortname-$class"
+    base="$encjson/$shortname-$class"
     index_long="$base.json"
     index_short="$base.jn"
 
@@ -19,8 +19,13 @@ function debug_json {
         if [ -f "$index_short" ]; then
             echo "decrypted index existes"
 
+                
+            # Version of encore used to write
+            version="$(cat "$index_short" | jq ' .version' | sed 's/"//g')"
+            
             # current path to encrypted file
             path="$(cat "$index_short" | jq ' .path' | sed 's/"//g')"
+
 
             # key used for the encryption
             key="$(cat "$index_short" | jq ' .key' | sed 's/"//g')"
