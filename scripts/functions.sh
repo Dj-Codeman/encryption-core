@@ -8,10 +8,10 @@ source /opt/encore/config
 
 function generate_keys {
     echo "Cleaning old keys and generating new ones"
-    rm -rfv "$keydir/"
-    rm -rfv "$plnjson/"
-    rm -rfv "$encjson/"
-    rm -rfv "$datadir/"
+    rm -rfv "$keydir/*"
+    rm -rfv "$plnjson/*"
+    rm -rfv "$encjson/*"
+    rm -rfv "$datadir/*"
     mkdir -pv "$keydir/"
     mkdir -pv "$plnjson/"
     mkdir -pv "$datadir"

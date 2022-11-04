@@ -234,8 +234,8 @@ function install() {
 
     encore initialize
 
-    chown -Rfv $USER:$USER /opt/encore
-    chown -Rfv $USER:$USER /var/encore
+    chown -Rfv $USER:$USER /opt/encore/*
+    chown -Rfv $USER:$USER /var/encore/*
     chown -Rfv $USER:$USER /var/log/encore
     chown -Rfv $USER:$USER /etc/encore
 
@@ -326,7 +326,7 @@ if [ -f "/usr/local/bin/encore" ]; then
 
 
     # after backups are done
-    update
+    update "$1"
 
 else
 
