@@ -16,7 +16,7 @@
 #  V1.25 !-> V2.00 P1.50 -> VX.xx Patched versions can update for debugging but will require 
 # re initilazaation
 
-installer_version="P2.14"
+installer_version="P2.15"
 
 function update() {
     source /opt/encore/scripts/functions.sh
@@ -131,6 +131,7 @@ function update() {
         #############
         # SECOND TEST
         # functionallity test
+        unset test_key_num
         test_key_num="$(shuf -i $key_cur-$key_max -n 1)"
     
         # where the file originally came from
