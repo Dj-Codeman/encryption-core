@@ -1,0 +1,3 @@
+git add -A * adds all the changed files to the commit STAGING
+git commit -S -m "nessage" this is the commit with the valid signature
+git push "will work somehow ?" 
