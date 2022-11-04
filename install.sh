@@ -16,12 +16,16 @@
 #  V1.25 !-> V2.00 P1.50 -> VX.xx Patched versions can update for debugging but will require 
 # re initilazaation
 
-Nversion="V2.02"
+installer_version="V2.04"
 
 function update() {
     source /opt/encore/scripts/functions.sh
+    wget -O /tmp/update.tmp \ 
+    https://raw.githubusercontent.com/Dj-Codeman/encryption-core/master/install.sh 
+    source /tmp/update.tmp
+
     old_ver=$version
-    new_ver=$Nversion
+    new_ver=$installer_version
     ## verson verification
     key_max="$(($key_max -1))"
     #stupid fix for a stupid mistake i dont want to fix ^
