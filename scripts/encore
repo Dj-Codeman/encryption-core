@@ -103,6 +103,7 @@ elif [[ "$1" == "update" ]]; then
     rm -v /opt/encore/install.sh
     wget --no-cache --no-cookies -O /opt/encore/install.sh https://raw.githubusercontent.com/Dj-Codeman/encryption-core/master/install.sh
     bash /opt/encore/install.sh "$2"
+    exit 0
 
 elif [[ "$1" == "version" ]]; then
     echo "$version"
