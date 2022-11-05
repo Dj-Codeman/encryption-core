@@ -2,7 +2,7 @@
 source /opt/encore/scripts/functions.sh
 source /opt/encore/scripts/debug.sh
 
-function show_help {
+function show_help() {
     echo "Help your self foo"
     echo -e "# encore [write] [read] [destroy] [initialize]"
     echo -e "[update] [version] \n"
@@ -13,11 +13,10 @@ function show_help {
     echo -e "# encore  backup *Not implemented yet*"
     if [[ "$version" == "V1.50" ]]; then
         echo -e "# encore update just performs a wellness test"
-    else  
+    else
         echo -e "# encore update performs system wellness test then downloads the lates version of encore"
-    fi 
+    fi
 }
-
 
 if [[ "$1" == "write" ]]; then
 
@@ -46,7 +45,7 @@ elif [[ "$1" == "read" ]]; then
 
     shortname="$2"
     class="$3"
-    
+
     if [[ -z "$shortname" ]]; then
         echo -e "No shortname given \n"
         exit 1
@@ -65,7 +64,7 @@ elif [[ "$1" == "destroy" ]]; then
     class="$3"
 
     if [[ -z "$shortname" ]]; then
-        echo -e "No shortname given \n"  
+        echo -e "No shortname given \n"
         exit 1
     fi
 
@@ -84,11 +83,11 @@ elif [[ "$1" == "initialize" ]]; then
 elif [[ "$1" == "debug" ]]; then
 
     if [[ "$2" == "json" ]]; then
-    
-    shortname="$3"
-    class="$4"
-    
-    debug_json "$shortname" "$class"
+
+        shortname="$3"
+        class="$4"
+
+        debug_json "$shortname" "$class"
 
     elif [[ -z "$3" ]]; then
         echo -e "morecode \n"
