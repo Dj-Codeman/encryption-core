@@ -1,7 +1,0 @@
-iso8859_13.lo: iso8859_13.c /usr/include/stdc-predef.h regenc.h config.h \
- /usr/lib/gcc/x86_64-pc-linux-gnu/12.2.0/include/stddef.h oniguruma.h
-/usr/include/stdc-predef.h:
-regenc.h:
-config.h:
-/usr/lib/gcc/x86_64-pc-linux-gnu/12.2.0/include/stddef.h:
-oniguruma.h:
