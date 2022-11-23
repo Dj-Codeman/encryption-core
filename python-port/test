@@ -1,0 +1,114 @@
+from cnf import *
+import json
+import pyjq
+import shutil
+import sys
+import os
+import warnings
+import random
+import datetime
+
+version="Vx.01"
+
+def relazy():
+    #! The do nothing function should not be this long
+    old_stout = sys.stdout
+    null = open('/dev/null', 'w')
+    sys.stdout = null
+    print("HELLOOOOOO OUTTTTTT THEREEEEEEEEEE")
+    sys.stdout = old_stout
+
+def write_log(data):
+    now = datetime.datetime.now()
+    timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
+
+    write = f"echo -e \"{data}: {timestamp} \n\" >> {logdir}"
+    os.system(write)
+
+def start_log():
+    if os.path.exists(key_path) == True:
+        os.remove(logdir)
+    
+    write_log("LOG START")
+
+# i = 65
+# version = "V2.06"
+# location = f"{keydir}/{i}.dk"
+# index = f"{plnjson}/{i}.json"
+
+# index1 = {
+#     "version": version,
+#     "number": i,
+#     "location": location,
+#     "parent": systemkey
+# }
+
+# result1 = pyjq.one('{version: .version , number: .number , location: .location , parent: .parent}', index1)
+# # print(result1)
+
+# # writing the index
+# with open(index, "w") as write_file:
+#     json.dump(result1, write_file, indent=2)
+#     print("Key index pair:",i," Created\n")
+
+version = str(version)
+key = str("systemkey")
+
+def fetch_keys(key):
+    if key == "systemkey":
+        key_index_path = f"{plnjson}/master.json"
+        with open(key_index_path) as j:
+            # why tf is this called a dictionary instead of a md array
+            data = json.load(j)
+            key_version = str(data['version'])
+            key_location = str(data['location'])
+    else:
+        key_index_path = f"{plnjson}/{key}.json"
+        with open(key_index_path) as j:
+            # why tf is this called a dictionary instead of a md array
+            data = json.load(j)
+            key_version = str(data['version'])
+            key_location = str(data['location'])
+    #TODO make the version filtering more complicated later like V1 V2
+    if version != key_version:
+        warnings.warn("Key / System version mismatch check log", Warning)
+        write_log("The version tag stored with the key is not the same")
+        write_log("As the version of encore running. I recommend")
+        write_log("Extracting all of your data and running encore initialize")
+
+    return key_location
+
+
+# key_path = fetch_keys(key)
+
+def check_keys():
+
+    valid = 0
+    rand = int(random.randint(1, 4))
+    key_depth = int(key_max / rand)
+    test_depth = int(random.randint(key_cur +1, key_depth))
+
+    i = key_depth
+    while i >= test_depth:
+        key_path = fetch_keys(i)
+
+        if os.path.exists(key_path) == True:
+            valid = valid
+        else:
+            valid += 1
+            #TODO check the md5 sum
+        i -= 1
+
+    if valid == int(0):
+        write_log("Keys verified")
+    else:
+        write_log("Keys missing or invalid re-keying")
+        generate_keys()
+        sys.exit("Keys were rotated please run again")
+
+
+def fwrite(path, object_class, object_item):
+    key = int(random.randint(key_cur, key_max-1))
+    relazy()
+
+fwrite("garbage", "trash", "shit")

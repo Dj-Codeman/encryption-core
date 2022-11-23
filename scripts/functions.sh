@@ -14,6 +14,7 @@ function generate_keys {
     rm -rfv "$datadir/*"
     mkdir -pv "$keydir/"
     mkdir -pv "$plnjson/"
+    mkdir -pv "$encjson/"
     mkdir -pv "$datadir"
 
     #creating new system key
@@ -117,7 +118,7 @@ function fwrite {
             key=${key//$'\n'/} # if the variable isn't filtered multiple keys are copyed to the json file
             uid=${uid//$'\n'/}
             output=${output//$'\n'/}
-            echo "[\"$version\",\"$shortname\",\"$class\",\"$key\",\"$uid\",\"$datapath\",\"$output\"]" | jq -r '{ "version":.[0], "name":.[1], "class":.[2], "key":.[3], "uid":.[4], "path":.[5], "dir":.[6] }' >"$encjson.jn"
+            echo "[\"$version\",\"$shortname\",\"$class\",\"$key\",\"$uid\",\"$datapath\",\"$output\"]" | jq -r '{ "version":.[0], "name":.[1], "class":.[2], "key":.[3], "uid":.[4], "path":.[5], "dir":.[6] }' > "$encjson.jn"
             encrypt -e -i "$encjson.jn" -o "$encjson.json" -k "$(cat "$(fetch_keys "systemkey")")" >> $logdir
             if [ -f "$encjson.json" ]; then
                 echo "index created succefully" >> $logdir

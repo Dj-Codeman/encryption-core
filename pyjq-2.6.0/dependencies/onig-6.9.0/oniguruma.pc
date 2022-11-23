@@ -1,0 +1,14 @@
+prefix=/home/dwhitfield/DEV/encryption-core/pyjq-2.6.0/dependencies/onig_install
+exec_prefix=/home/dwhitfield/DEV/encryption-core/pyjq-2.6.0/dependencies/onig_install
+libdir=/home/dwhitfield/DEV/encryption-core/pyjq-2.6.0/dependencies/onig_install/lib
+includedir=/home/dwhitfield/DEV/encryption-core/pyjq-2.6.0/dependencies/onig_install/include
+datarootdir=/home/dwhitfield/DEV/encryption-core/pyjq-2.6.0/dependencies/onig_install/share
+datadir=/home/dwhitfield/DEV/encryption-core/pyjq-2.6.0/dependencies/onig_install/share
+
+Name: oniguruma
+Description: Regular expression library
+Version: 6.9.0
+Requires:
+Libs: -L${libdir} -lonig
+Cflags: -I${includedir}
+
